@@ -10,6 +10,10 @@
 //Load the core data wrapped as string
 const DATA_COVID = d3.csvParse(DATA_COVID_RAW)
 const DATA_SMOKING = d3.csvParse(DATA_SMOKING_RAW)
+const DATA_ALCOHOL = d3.csvParse(DATA_ALCOHOL_RAW)
+const DATA_HEALTHSPENDINGS = d3.csvParse(DATA_HEALTHSPENDINGS_RAW)
+const DATA_HOSPITALBEDS = d3.csvParse(DATA_HOSPITALBEDS_RAW)
+const DATA_OBESITY = d3.csvParse(DATA_OBESITY_RAW)
 
 //The main data object containing all available data
 //Check dataCleaning.js for the data structure
@@ -18,8 +22,12 @@ var DATA = {}
 //Use functions from dataCleaning.js to fill the main data structure with raw data from csv files
 insertCovidData(DATA, DATA_COVID)
 insertSmokingData(DATA, DATA_SMOKING)
-removeIncompleteEntries(DATA)
+insertAlcoholData(DATA, DATA_ALCOHOL)
+insertHealthSpendingsData(DATA, DATA_HEALTHSPENDINGS)
+insertHospitalBedData(DATA, DATA_HOSPITALBEDS)
+insertObesityData(DATA, DATA_OBESITY)
 
+removeIncompleteEntries(DATA, [])
 console.log(DATA)
 
 //Variables for the current state of the visualization
