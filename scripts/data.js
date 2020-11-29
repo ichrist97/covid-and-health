@@ -28,6 +28,7 @@ insertHospitalBedData(DATA, DATA_HOSPITALBEDS)
 insertObesityData(DATA, DATA_OBESITY)
 
 removeIncompleteEntries(DATA, [])
+console.log(`data of ${Object.keys(DATA).length} countries and regions found`)
 console.log(DATA)
 
 //Variables for the current state of the visualization

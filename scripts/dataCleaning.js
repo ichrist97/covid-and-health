@@ -63,7 +63,7 @@ function insertHospitalBedData(data, dataHospitalBeds) {
 
 //Adds health spending data to the main data object
 function insertHealthSpendingsData(data, dataHealthSpendings) {
-    insertOECDData(data, dataHealthSpendings, 'healthSpending')
+    insertOECDData(data, dataHealthSpendings, 'healthSpendings')
 }
 
 //Adds alcohol consumption data to the main data object
