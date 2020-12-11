@@ -1,0 +1,5 @@
+#timeline {
+    background-color: yellow;
+
+    grid-area: 7 / 1 / 8 / 2;
+}
