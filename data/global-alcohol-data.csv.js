@@ -5,8 +5,8 @@
 //NOTE: use ` before the first and after the last line of csv
 //For the headers to be detected properly the ` must be placed on the same line as the content
 
-const DATA_ALCOHOL_RAW =
-    `"LOCATION","INDICATOR","SUBJECT","MEASURE","FREQUENCY","TIME","Value","Flag Codes"
+export const DATA_ALCOHOL_RAW = () => {
+  `"LOCATION","INDICATOR","SUBJECT","MEASURE","FREQUENCY","TIME","Value","Flag Codes"
 "AUS","ALCOHOL","TOT","LT_CAP15","A","2015",9.8,
 "AUS","ALCOHOL","TOT","LT_CAP15","A","2016",9.5,
 "AUS","ALCOHOL","TOT","LT_CAP15","A","2017",9.5,
@@ -175,4 +175,5 @@ const DATA_ALCOHOL_RAW =
 "CRI","ALCOHOL","TOT","LT_CAP15","A","2015",3.7,
 "CRI","ALCOHOL","TOT","LT_CAP15","A","2016",3.8,
 "CRI","ALCOHOL","TOT","LT_CAP15","A","2017",3.8,
-"CRI","ALCOHOL","TOT","LT_CAP15","A","2018",3.8,`
+"CRI","ALCOHOL","TOT","LT_CAP15","A","2018",3.8,`;
+};

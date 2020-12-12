@@ -1,26 +1,18 @@
 <!DOCTYPE html>
-
-<head>
+<html>
+  <head>
     <title>Covid and Health</title>
-    <link rel="stylesheet" href="stylesheets/core.css">
+    <link rel="stylesheet" href="stylesheets/core.css" />
+  </head>
 
-</head>
-
-<body>
+  <body>
     <h1>Covid and Health</h1>
     <h2>wow. so much information...</h2>
-</body>
 
-<!--Load csv data wrapped as js string-->
-<script src="data/global-covid-data.csv.js"></script>
-<script src="data/global-smoking-data.csv.js"></script>
-<script src="data/global-alcohol-data.csv.js"></script>
-<script src="data/global-healthspendings-data.csv.js"></script>
-<script src="data/global-hospitalbeds-data.csv.js"></script>
-<script src="data/global-obesity-data.csv.js"></script>
+    <!-- Details Bar Chart -->
+    <div id="details-bar-chart-container"></div>
 
-<!--Load d3 and scripts-->
-<script src="scripts/d3.js"></script>
-<script src="scripts/observer.js"></script>
-<script src="scripts/dataCleaning.js"></script>
-<script src="scripts/data.js"></script>
+    <!--Load d3 and scripts-->
+    <script type="module" src="scripts/main.js"></script>
+  </body>
+</html>
