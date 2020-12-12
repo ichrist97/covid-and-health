@@ -1,15 +1,43 @@
 @font-face {
-    font-family: Roboto;
-    src: url(../fonts/Roboto-Regular.ttf);
+  font-family: Roboto;
+  src: url(../fonts/Roboto-Regular.ttf);
 }
 
 @font-face {
-    font-family: RobotoBold;
-    src: url(../fonts/Roboto-Bold.ttf);
+  font-family: RobotoBold;
+  src: url(../fonts/Roboto-Bold.ttf);
 }
 
 html {
-    font-family: Roboto;
-    color: azure;
-    background-color: #121212;
+  font-family: Roboto;
+  color: azure;
+  background-color: #121212;
+}
+
+body {
+  margin: 0;
+  width: 100vw;
+  height: 100vh;
+}
+
+h1 {
+  margin: 0;
+}
+
+/* 
+Global styling for the grid and grid elements 
+*/
+
+#grid {
+  display: grid;
+  width: 100%;
+  height: 100%;
+
+  /* two columns and ten equi-sized rows */
+  grid-template-columns: 70% 30%;
+  grid-template-rows: 10% 10% 10% 10% 10% 10% 10% 10% 10% 10%;
+}
+
+.bar {
+  fill: steelblue;
 }

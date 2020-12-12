@@ -1,26 +1,43 @@
 <!DOCTYPE html>
-
-<head>
+<html>
+  <head>
+    <meta charset="utf-8" />
     <title>Covid and Health</title>
-    <link rel="stylesheet" href="stylesheets/core.css">
+    <link rel="stylesheet" href="stylesheets/core.css" />
+    <!-- Individual styleshees for each plot -->
+    <link rel="stylesheet" href="stylesheets/lineChart.css" />
+    <link rel="stylesheet" href="stylesheets/scatterPlot.css" />
+    <link rel="stylesheet" href="stylesheets/timeline.css" />
+    <link rel="stylesheet" href="stylesheets/featureSelection.css" />
+    <link rel="stylesheet" href="stylesheets/countryDetails.css" />
+    <link rel="stylesheet" href="stylesheets/barPlot.css" />
+  </head>
 
-</head>
+  <body>
+    <!-- All elements are wrapped in a grid layout -->
+    <div id="grid">
+      <div id="lineChart" class="gridElement">
+        <h1>Line Chart</h1>
+      </div>
+      <div id="scatterPlot" class="gridElement">
+        <h1>Scatter Plot (main)</h1>
+      </div>
+      <div id="timeline" class="gridElement">
+        <h1>Timeline</h1>
+      </div>
+      <div id="featureSelection" class="gridElement">
+        <h1>Feature Selection</h1>
+      </div>
+      <div id="countryDetails" class="gridElement">
+        <h1>Selected Country Details</h1>
+      </div>
+      <div id="details-bar-chart-container" class="gridElement">
+        <h1>Bar Plot</h1>
+      </div>
+    </div>
 
-<body>
-    <h1>Covid and Health</h1>
-    <h2>wow. so much information...</h2>
-</body>
-
-<!--Load csv data wrapped as js string-->
-<script src="data/global-covid-data.csv.js"></script>
-<script src="data/global-smoking-data.csv.js"></script>
-<script src="data/global-alcohol-data.csv.js"></script>
-<script src="data/global-healthspendings-data.csv.js"></script>
-<script src="data/global-hospitalbeds-data.csv.js"></script>
-<script src="data/global-obesity-data.csv.js"></script>
-
-<!--Load d3 and scripts-->
-<script src="scripts/d3.js"></script>
-<script src="scripts/observer.js"></script>
-<script src="scripts/dataCleaning.js"></script>
-<script src="scripts/data.js"></script>
+    <!--Load d3 and scripts-->
+    <script src="scripts/d3.v6.js" charset="utf8"></script>
+    <script type="module" src="scripts/main.js"></script>
+  </body>
+</html>
