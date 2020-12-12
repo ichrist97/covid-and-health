@@ -120,5 +120,4 @@ dist
 .pnp.*
 
 # custom
-.prettierrc
 debug.log
