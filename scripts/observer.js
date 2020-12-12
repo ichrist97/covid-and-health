@@ -25,14 +25,10 @@ function ObservableData(defaultValue) {
 
   this.value = defaultValue;
 
-  this.notify = function () {
-    this.observers.forEach((x) => x(this.value));
-  };
-
   this.update = function (value) {
     this.value = value;
     this.notify();
   };
 }
 
-export { Observable, ObservableData };
+export { ObservableData };
