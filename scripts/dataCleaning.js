@@ -14,7 +14,7 @@
 
 //Builds the base data structure from covid case data
 function insertCovidData(data, dataCovid) {
-  dataCovid.forEach((x) => {
+  dataCovid.forEach(x => {
     const country = x.countryterritoryCode
     if (!country) return
 
@@ -35,7 +35,7 @@ function insertCovidData(data, dataCovid) {
     const week = date.getWeek()
 
     if (!(week in data[country].covid)) {
-      const defaultWeek = { cases: 0, deaths: 0, days: new Set() }
+      const defaultWeek = { cases: 0, deaths: 0 }
       data[country].covid[week] = defaultWeek
     }
 
@@ -43,29 +43,12 @@ function insertCovidData(data, dataCovid) {
 
     data[country].covid[week].cases += parseInt(x.cases) / scaler
     data[country].covid[week].deaths += parseInt(x.deaths) / scaler
-    data[country].covid[week].days.add(date.getDay())
   })
-
-  //Remove all weeks with less than 7 data points
-  //Apparently the dataset is missing some days??
-  //If I do this entire weeks are filtered out.
-  //I think having slightly off numbers for some weeks is better than having no data for the same weeks
-  //This is, however, up for debate
-  /*
-    Object.keys(data).forEach(x => {
-        const covid = data[x].covid
-        Object.keys(covid).filter(w => { 
-            const days = covid[w].days.size
-            delete covid[w].days
-            if (days < 7) return true 
-        }).forEach(w => { delete covid[w] })
-    })
-    */
 }
 
 //Adds data from the OECD csv format to the main data object
 function insertOECDData(data, oecdData, name) {
-  oecdData.forEach((x) => {
+  oecdData.forEach(x => {
     const country = x.LOCATION
 
     if (country in data) {
@@ -83,12 +66,12 @@ function insertOECDData(data, oecdData, name) {
 //Removes any countries that have data missing
 function removeIncompconsteEntries(data, args) {
   Object.keys(data)
-    .filter((x) => {
+    .filter(x => {
       const value = data[x]
-      if (x == "") return true
+      if (x == '') return true
 
       const result = null
-      args.forEach((a) => {
+      args.forEach(a => {
         if (!(a in value)) result = a
       })
 
@@ -99,7 +82,7 @@ function removeIncompconsteEntries(data, args) {
 
       return false
     })
-    .forEach((x) => delete data[x])
+    .forEach(x => delete data[x])
 }
 
 //I did not feel like conding date stuff myself (maybe the words kind of coding)
@@ -143,9 +126,9 @@ Date.prototype.getWeek = function (dowOffset = 1) {
 //Converts a date object to the date format used in covid data
 //The applied format is mm/dd/yyyy
 Date.prototype.formated = function formatedDate() {
-  const month = String(this.getMonth() + 1).padStart(2, "0")
+  const month = String(this.getMonth() + 1).padStart(2, '0')
   const year = String(this.getFullYear())
-  const day = String(this.getDate()).padStart(2, "0")
+  const day = String(this.getDate()).padStart(2, '0')
   return `${day}/${month}/${year}`
 }
 

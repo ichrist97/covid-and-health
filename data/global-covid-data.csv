@@ -1,12 +1,4 @@
-//This is not ideal but the only viable way I am aware of, of laoding local csv data
-//CORS policies do not allow loading local files directly
-//This wraps the csv in a multiline javascript string which can the be parsed
-
-//NOTE: use ` before the first and after the last line of csv
-//For the headers to be detected properly the ` must be placed on the same line as the content
-
-export const DATA_COVID_RAW = () => {
-  return `dateRep,day,month,year,cases,deaths,countriesAndTerritories,geoId,countryterritoryCode,popData2019,continentExp,sum14DaysPer100000
+dateRep,day,month,year,cases,deaths,countriesAndTerritories,geoId,countryterritoryCode,popData2019,continentExp,sum14DaysPer100000
 16/11/2020,16,11,2020,163,9,Afghanistan,AF,AFG,38041757,Asia,4.65278194
 15/11/2020,15,11,2020,205,12,Afghanistan,AF,AFG,38041757,Asia,4.57129254
 14/11/2020,14,11,2020,66,10,Afghanistan,AF,AFG,38041757,Asia,4.23219148
@@ -55941,5 +55933,4 @@ export const DATA_COVID_RAW = () => {
 24/03/2020,24,3,2020,0,1,Zimbabwe,ZW,ZWE,14645473,Africa,
 23/03/2020,23,3,2020,0,0,Zimbabwe,ZW,ZWE,14645473,Africa,
 22/03/2020,22,3,2020,1,0,Zimbabwe,ZW,ZWE,14645473,Africa,
-21/03/2020,21,3,2020,1,0,Zimbabwe,ZW,ZWE,14645473,Africa,`;
-};
+21/03/2020,21,3,2020,1,0,Zimbabwe,ZW,ZWE,14645473,Africa,
