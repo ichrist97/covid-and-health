@@ -15,7 +15,7 @@ function filterBarDataForCategory(data, category) {
 }
 
 function generateDetailsBarChart(data) {
-  const tmpCate = "obesity";
+  const tmpCate = "obesity"; //tmp
   const barData = filterBarDataForCategory(data, tmpCate);
 
   // set the dimensions and margins of the graph

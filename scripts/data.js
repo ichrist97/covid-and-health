@@ -14,20 +14,18 @@ import { DATA_ALCOHOL_RAW } from "../data/global-alcohol-data.csv.js";
 import { DATA_SMOKING_RAW } from "../data/global-smoking-data.csv.js";
 import { DATA_HEALTHSPENDINGS_RAW } from "../data/global-healthspendings-data.csv.js";
 import { DATA_HOSPITALBEDS_RAW } from "../data/global-hospitalbeds-data.csv.js";
-//import * as d3 from "./d3.js";
-import { csvParse } from "./d3.js";
 
 //Global varaibles to be used by charts and other visualization components
 //Changing these might break other code, so be careful
 
 function loadData() {
   //Load the core data wrapped as string
-  const DATA_COVID = csvParse(DATA_COVID_RAW);
-  const DATA_SMOKING = csvParse(DATA_SMOKING_RAW);
-  const DATA_ALCOHOL = csvParse(DATA_ALCOHOL_RAW);
-  const DATA_HEALTHSPENDINGS = csvParse(DATA_HEALTHSPENDINGS_RAW);
-  const DATA_HOSPITALBEDS = csvParse(DATA_HOSPITALBEDS_RAW);
-  const DATA_OBESITY = csvParse(DATA_OBESITY_RAW);
+  const DATA_COVID = d3.csvParse(DATA_COVID_RAW());
+  const DATA_SMOKING = d3.csvParse(DATA_SMOKING_RAW());
+  const DATA_ALCOHOL = d3.csvParse(DATA_ALCOHOL_RAW());
+  const DATA_HEALTHSPENDINGS = d3.csvParse(DATA_HEALTHSPENDINGS_RAW());
+  const DATA_HOSPITALBEDS = d3.csvParse(DATA_HOSPITALBEDS_RAW());
+  const DATA_OBESITY = d3.csvParse(DATA_OBESITY_RAW());
 
   //The main data object containing all available data
   //Check dataCleaning.js for the data structure

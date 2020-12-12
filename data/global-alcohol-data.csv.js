@@ -6,7 +6,7 @@
 //For the headers to be detected properly the ` must be placed on the same line as the content
 
 export const DATA_ALCOHOL_RAW = () => {
-  `"LOCATION","INDICATOR","SUBJECT","MEASURE","FREQUENCY","TIME","Value","Flag Codes"
+  return `"LOCATION","INDICATOR","SUBJECT","MEASURE","FREQUENCY","TIME","Value","Flag Codes"
 "AUS","ALCOHOL","TOT","LT_CAP15","A","2015",9.8,
 "AUS","ALCOHOL","TOT","LT_CAP15","A","2016",9.5,
 "AUS","ALCOHOL","TOT","LT_CAP15","A","2017",9.5,
