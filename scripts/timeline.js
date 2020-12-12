@@ -1,54 +1,61 @@
+/// <reference path='d3.js' />
+
 function createTimeline(dataContainer) {
   // destructure data container
   const { data, selectedWeek } = dataContainer
 
   //Define some properties for the layout of the timeline
-  const timeline = {}
-
-  timeline.margin = 40
-  timeline.tickHeight = 30
-  timeline.moveDuration = 800
+  const margin = 40
+  const tickHeight = 30
+  const moveDuration = 800
 
   //Find the start and end week of the data
-  timeline.startWeek = Math.min(
+  const startWeek = Math.min(
     ...Object.values(data).map(x => {
       return Math.min(...Object.keys(x.covid))
     })
   )
 
-  timeline.endWeek = Math.max(
+  const endWeek = Math.max(
     ...Object.values(data).map(x => {
       return Math.max(...Object.keys(x.covid))
     })
   )
 
   //Grab the svg element and store some properties for convenience
-  timeline.svg = d3.select('#timeline').select('.plot')
-  timeline.width = parseFloat(timeline.svg.style('width')) - 2 * timeline.margin
-  timeline.height = parseFloat(timeline.svg.style('height')) - 2 * timeline.margin
+  const svg = d3.select('#timeline').select('.plot')
+  const width = parseFloat(svg.style('width')) - 2 * margin
+  const height = parseFloat(svg.style('height')) - 2 * margin
 
   //Create an axis for displaying the timeline
-  timeline.x = d3
-    .scaleLinear()
-    .domain([timeline.startWeek, timeline.endWeek])
-    .range([0, timeline.width])
+  const x = d3.scaleLinear().domain([startWeek, endWeek]).range([0, width])
 
-  timeline.svg
+  svg
     .append('g')
-    .attr(
-      'transform',
-      'translate(' + timeline.margin + ',' + (timeline.height + timeline.margin) + ')'
-    )
-    .call(d3.axisTop(timeline.x).tickSize(timeline.tickHeight))
+    .attr('transform', 'translate(' + margin + ',' + (height + margin) + ')')
+    .call(d3.axisTop(x).tickSize(tickHeight))
 
   //Updates the scatter plot
-  timeline.updateTimeline = () => {}
+  function updateTimeline() {}
+
+  //Listen to clicks on the timeline
+  d3.select('#timeline').on('click', e => {
+    const rect = e.target.getBoundingClientRect()
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+
+    if (x > margin && x < rect.width - margin) {
+      const width = rect.width - margin * 2
+      const dist = (x - margin) / width
+      const week = Math.floor(dist * (endWeek - startWeek) + startWeek)
+      selectedWeek.update(week)
+    }
+  })
 
   //Subscribe the update to global events
-  selectedWeek.subscribe(timeline.updateTimeline)
+  selectedWeek.subscribe(updateTimeline)
 
-  //Perform the initial update on window load
-  window.addEventListener('load', timeline.updateTimeline)
+  updateTimeline()
 }
 
 export { createTimeline }
