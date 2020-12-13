@@ -32,20 +32,20 @@ function createScatterPlot(dataContainer) {
   const height = parseFloat(svg.style('height')) - 2 * margin
 
   //Help ourselves to some x axis
-  const x = d3.scaleLinear().domain([0, maxCases]).range([0, width])
+  const x = d3.scaleLog().domain([1, maxCases]).range([0, width]).clamp(true).nice()
 
   svg
     .append('g')
     .attr('transform', 'translate(' + margin + ',' + (height + margin) + ')')
-    .call(d3.axisBottom(x))
+    .call(d3.axisBottom(x).ticks(15, '.0f'))
 
   //Basically the same for the y axis
-  const y = d3.scaleLinear().domain([0, maxDeaths]).range([height, 0])
+  const y = d3.scaleLog().domain([1, maxDeaths]).range([height, 0]).clamp(true).nice()
 
   svg
     .append('g')
     .attr('transform', 'translate(' + margin + ',' + margin + ')')
-    .call(d3.axisLeft(y))
+    .call(d3.axisLeft(y).ticks(15, '.0f'))
 
   //And a scale axis for convenience
   const r = d3.scaleLinear().domain([0, 1]).range([minScale, maxScale])
@@ -80,6 +80,20 @@ function createScatterPlot(dataContainer) {
     return { min: min, max: max, span: max - min }
   }
 
+  //Computes the fill color for a dot from it's factor value
+  function dotFill(value, bounds) {
+    //For now we just blend from black to white
+    const c = (1 - (value - bounds.min) / bounds.span) * 255
+    return `rgb(${c}, ${c}, ${c})`
+  }
+
+  //Compues the sort order for two countries
+  function compareCountries(a, b) {
+    if (a.country == selectedCountry.value) return 1
+    if (b.country == selectedCountry.value) return -1
+    return b.factor - a.factor
+  }
+
   //Shows the cleaned data in the plot
   function showScatterPlot(data, bounds) {
     const update = container.selectAll('circle').data(data, x => x.country)
@@ -95,12 +109,18 @@ function createScatterPlot(dataContainer) {
       .append('circle')
       .attr('cx', d => x(d.cases))
       .attr('cy', d => y(d.deaths))
-      .style('fill', d => (d.country == 'DEU' ? '#ff00ff' : '#ffffff'))
       .transition(d3.easeBackOut)
       .duration(scaleDuration)
       .attrTween('r', d => d3.interpolate(0, r((d.factor - bounds.min) / bounds.span)))
 
     update.exit().transition(d3.easeBackIn).duration(scaleDuration).attr('r', 0).remove()
+
+    container
+      .selectAll('circle')
+      .sort(compareCountries)
+      .style('fill', d =>
+        d.country == selectedCountry.value ? '#0055ff' : dotFill(d.factor, bounds)
+      )
   }
 
   //Updates the scatter plot
