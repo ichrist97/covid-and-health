@@ -55,3 +55,7 @@ Global styling for the grid and grid elements
   width: 100%;
   height: 100%;
 }
+
+.plot text {
+  user-select: none;
+}

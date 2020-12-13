@@ -18,11 +18,16 @@ function createTimeline(dataContainer) {
     })
   )
 
+  //Instead of the actual end week, let's just display all weeks of 2020
+  const endWeek = 53
+
+  /*
   const endWeek = Math.max(
     ...Object.values(data).map(x => {
       return Math.max(...Object.keys(x.covid))
     })
   )
+  */
 
   const weekDelta = endWeek - startWeek
 

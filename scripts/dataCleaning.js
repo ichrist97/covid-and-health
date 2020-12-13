@@ -27,11 +27,8 @@ function insertCovidData(data, dataCovid) {
     const info = { cases: x.cases, deaths: x.deaths }
 
     //Get the matching week for the data point and insert the value
-    const day = dateString.substring(0, 2)
-    const month = dateString.substring(3, 5)
-    const year = dateString.substring(6)
-
-    const date = new Date(year, month, day)
+    if (x.year != '2020') return
+    const date = new Date(x.year, x.month - 1, x.day)
     const week = date.getWeek()
 
     if (!(week in data[country].covid)) {
