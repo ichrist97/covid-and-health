@@ -1,5 +1,10 @@
 #featureSelection {
-    background-color: olivedrab;
+  background-color: olivedrab;
 
-    grid-area: 1 / 2 / 2 / 3;
+  grid-area: 1 / 2 / 2 / 3;
+}
+
+#health-features {
+  display: flex;
+  flex-direction: row;
 }
