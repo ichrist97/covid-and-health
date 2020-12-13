@@ -1,10 +1,8 @@
-# Covid and Health
-
-## Group 20
+# Covid and Health [Group 20]
 
 ### Project for the masters course on information visualization at LMU Munich WS 20/12
 
-## Components
+### Components
 
 The main components of the visualization is a **scatter plot** that displays infections and deaths per country on it's axis and matches this information with additional data to health and lifestyle through point size and color. The scatter plot allows for selection a country for further inspection.
 
@@ -20,17 +18,17 @@ An **overview line plot** shows the infection or death rates for all countries o
 
 ---
 
-## Completed
+### Completed
 
 -
 
-## Work in Progress
+### Work in Progress
 
 - Scatter Plot (main plot)
 - Timeline
 - Bar Chart
 
-## Not yet started
+### Not yet started
 
 - Feature Selection
 - Overview Line Plot
