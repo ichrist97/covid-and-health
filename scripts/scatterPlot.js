@@ -124,10 +124,12 @@ function createScatterPlot(dataContainer) {
     update
       .transition(d3.easeBackInOut)
       .duration(moveDuration)
+      .attr('r', d => r((d.factor - bounds.min) / bounds.span))
       .attr('cx', d => x(d.cases))
       .attr('cy', d => y(d.deaths))
+      .transition()
 
-    const enter = update
+    update
       .enter()
       .append('circle')
       .attr('cx', d => x(d.cases))
