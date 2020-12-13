@@ -1,3 +1,5 @@
+/// <reference path='d3.js' />
+
 function createScatterPlot(dataContainer) {
   // destructure data container
   const { data, selectedFactor, selectedFilter, selectedWeek, selectedCountry } = dataContainer
@@ -114,9 +116,6 @@ function createScatterPlot(dataContainer) {
   selectedFilter.subscribe(updateScatterPlot)
 
   updateScatterPlot()
-
-  //TODO remove
-  window.addEventListener('click', e => selectedWeek.update(selectedWeek.value + 1))
 }
 
 export { createScatterPlot }

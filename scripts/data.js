@@ -1,4 +1,4 @@
-/// <reference path='d3.v6.js' />
+/// <reference path='d3.js' />
 
 import { insertCovidData, insertOECDData } from './dataCleaning.js'
 import { ObservableData } from './observer.js'

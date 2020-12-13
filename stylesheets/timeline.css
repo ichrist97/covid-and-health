@@ -1,5 +1,9 @@
 #timeline {
-    background-color: brown;
+  background-color: brown;
 
-    grid-area: 10 / 1 / 11 / 2;
+  grid-area: 10 / 1 / 11 / 2;
+}
+
+#timeline .indicator {
+  fill: #550000;
 }

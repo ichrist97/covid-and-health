@@ -44,6 +44,12 @@ Global styling for the grid and grid elements
   position: relative;
 }
 
+.gridElement h1 {
+  position: absolute;
+  color: #ffffff44;
+  font-size: 20px;
+}
+
 .plot {
   position: absolute;
   width: 100%;
