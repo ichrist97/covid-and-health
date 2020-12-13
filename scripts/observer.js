@@ -26,6 +26,7 @@ function ObservableData(defaultValue) {
   this.value = defaultValue
 
   this.update = function (value) {
+    console.log('selected: ' + value)
     this.value = value
     this.notify()
   }

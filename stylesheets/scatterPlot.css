@@ -1,5 +1,14 @@
 #scatterPlot {
-  background-color: crimson;
+  background-color: #333333;
 
   grid-area: 3 / 1 / 10 / 2;
+}
+
+/* 
+Tooltip styling for hover over information displays
+*/
+
+.tooltip {
+  font-weight: bold;
+  fill: red;
 }

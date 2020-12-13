@@ -67,7 +67,13 @@ function createScatterPlot(dataContainer) {
       if (!(week in value.covid)) return
       const covid = value.covid[week]
 
-      out.push({ country: x, cases: covid.cases, deaths: covid.deaths, factor: factor.value })
+      out.push({
+        country: x,
+        name: value.name,
+        cases: covid.cases,
+        deaths: covid.deaths,
+        factor: factor.value,
+      })
     })
 
     return out
@@ -94,6 +100,23 @@ function createScatterPlot(dataContainer) {
     return b.factor - a.factor
   }
 
+  //Shows a tooltip for the given country
+  function showTooltip(e, d) {
+    container
+      .append('text')
+      .classed('tooltip', true)
+      .text(d.name)
+      .attr('x', x(d.cases))
+      .attr('y', y(d.deaths))
+      .attr('text-anchor', 'middle')
+      .attr('dominant-baseline', 'central')
+  }
+
+  //Removes all tooltips
+  function clearTooltip() {
+    container.selectAll('.tooltip').remove()
+  }
+
   //Shows the cleaned data in the plot
   function showScatterPlot(data, bounds) {
     const update = container.selectAll('circle').data(data, x => x.country)
@@ -104,11 +127,13 @@ function createScatterPlot(dataContainer) {
       .attr('cx', d => x(d.cases))
       .attr('cy', d => y(d.deaths))
 
-    update
+    const enter = update
       .enter()
       .append('circle')
       .attr('cx', d => x(d.cases))
       .attr('cy', d => y(d.deaths))
+      .on('mouseenter', showTooltip)
+      .on('mouseleave', clearTooltip)
       .transition(d3.easeBackOut)
       .duration(scaleDuration)
       .attrTween('r', d => d3.interpolate(0, r((d.factor - bounds.min) / bounds.span)))
@@ -121,6 +146,7 @@ function createScatterPlot(dataContainer) {
       .style('fill', d =>
         d.country == selectedCountry.value ? '#0055ff' : dotFill(d.factor, bounds)
       )
+      .on('click', (e, d) => selectedCountry.update(d.country))
   }
 
   //Updates the scatter plot

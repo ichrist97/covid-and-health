@@ -19,7 +19,8 @@ function insertCovidData(data, dataCovid) {
     if (!country) return
 
     if (!(country in data)) {
-      const values = { name: x.countriesAndTerritories, population: x.popData2019, covid: {} }
+      const name = x.countriesAndTerritories.replaceAll('_', ' ')
+      const values = { name: name, population: x.popData2019, covid: {} }
       data[country] = values
     }
 

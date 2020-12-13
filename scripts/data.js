@@ -24,7 +24,7 @@ async function loadData() {
   let selectedFactor = new ObservableData(FACTORS.SMOKING)
 
   //The week of the year selected on the timeline
-  let selectedWeek = new ObservableData(6)
+  let selectedWeek = new ObservableData(44)
 
   //The information selected for display on the overview line chart
   const OVERVIEWS = { INFECTIONS: 'infections', DEATHS: 'deaths' }
