@@ -1,11 +1,13 @@
 import { FACTORS } from "./data.js";
 
 let overallData;
+let svg;
+let barsContainer;
 
 // set the dimensions and margins of the graph
-let margin = { top: 20, right: 20, bottom: 30, left: 80 },
+const margin = { top: 20, right: 20, bottom: 30, left: 80 },
   width = 380 - margin.left - margin.right,
-  height = 500 - margin.top - margin.bottom;
+  height = 800 - margin.top - margin.bottom;
 
 function filterBarDataForCategory(category) {
   const filterData = [];
@@ -87,26 +89,30 @@ function renderGraph(data) {
   // append the svg object to the body of the page
   // append a 'group' element to 'svg'
   // moves the 'group' element to the top left margin
-  let svg = d3
+  svg = d3
     .select("#details-bar-chart-container")
     .append("svg")
     .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
+    .attr("height", height + margin.top + margin.bottom);
+
+  barsContainer = svg
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-  renderBars(svg, data);
+  renderBars(data);
 }
 
-function renderBars(svg, data) {
+function renderBars(data) {
   // set the ranges
   let y = d3.scaleBand().range([height, 0]).padding(0.1);
   let x = d3.scaleLinear().range([0, width]);
 
   // format the data
+  /*
   data.forEach((d) => {
     d.value = +d.value;
   });
+  */
 
   // Scale the range of the data in the domains
   x.domain([
@@ -122,10 +128,22 @@ function renderBars(svg, data) {
   );
 
   // append the rectangles for the bar chart
-  svg
-    .selectAll("g")
+  const update = barsContainer
+    .selectAll("rect")
     .data(data, (d) => d)
-    .join("rect")
+    .attr("class", "bar")
+    .attr("width", (d) => {
+      return x(d.value);
+    })
+    .attr("y", (d) => {
+      return y(d.country);
+    })
+    .attr("height", y.bandwidth());
+
+  update.exit().remove();
+  update
+    .enter()
+    .append("rect")
     .attr("class", "bar")
     .attr("width", (d) => {
       return x(d.value);
@@ -136,16 +154,16 @@ function renderBars(svg, data) {
     .attr("height", y.bandwidth());
 
   // add the x Axis
-  svg.append("g").attr("transform", `translate(0,${height})`).call(d3.axisBottom(x));
+  barsContainer.selectAll("g").remove();
+  barsContainer.append("g").attr("transform", `translate(0,${height})`).call(d3.axisBottom(x));
 
   // add the y Axis
-  svg.append("g").call(d3.axisLeft(y));
+  barsContainer.append("g").call(d3.axisLeft(y));
 }
 
 function updateChart(data) {
-  console.log("update graph");
-  const svg = d3.select("#details-bar-chart-container");
-  renderBars(svg, data);
+  //const svg = d3.select("#details-bar-chart-container").select("svg");
+  renderBars(data);
 }
 
 function generateDetailsBarChart(data) {
