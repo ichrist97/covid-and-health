@@ -160,7 +160,7 @@ function createScatterPlot(dataContainer) {
   //Subscribe the update to global events
   selectedCountry.subscribe(updateScatterPlot)
   selectedWeek.subscribe(updateScatterPlot)
-  selectedFilter.subscribe(updateScatterPlot)
+  selectedFactor.subscribe(updateScatterPlot)
 
   updateScatterPlot()
 }
