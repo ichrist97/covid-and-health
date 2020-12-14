@@ -127,7 +127,6 @@ function createScatterPlot(dataContainer) {
       .attr('r', d => r((d.factor - bounds.min) / bounds.span))
       .attr('cx', d => x(d.cases))
       .attr('cy', d => y(d.deaths))
-      .transition()
 
     update
       .enter()
