@@ -59,14 +59,4 @@ function setupFeatures(dataContainer) {
   container.querySelectorAll('input')[0].checked = true
 }
 
-function getSelectedFeature() {
-  // get selected feature
-  const domFeatures = Array.from(
-    document.querySelector('#health-features').querySelectorAll('input')
-  )
-  const selectedFeature = domFeatures.filter(item => item.checked)
-  const category = selectedFeature.length > 0 ? selectedFeature[0].value : domFeatures[0].value
-  return category
-}
-
-export { setupFeatures, getSelectedFeature }
+export { setupFeatures }

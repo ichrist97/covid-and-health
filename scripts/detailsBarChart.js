@@ -1,5 +1,3 @@
-import { getSelectedFeature } from './featureSelection.js'
-
 let svg
 let barsContainer
 
