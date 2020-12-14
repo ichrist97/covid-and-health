@@ -1,11 +1,16 @@
-import { loadData } from "./data.js";
-import { generateDetailsBarChart } from "./detailsBarChart.js";
-import { createScatterPlot } from "./scatterPlot.js";
-import { createTimeline } from "./timeline.js";
+import { loadData } from './data.js'
+import { generateDetailsBarChart } from './detailsBarChart.js'
+import { createScatterPlot } from './scatterPlot.js'
+import { createTimeline } from './timeline.js'
+import { setupFeatures } from './featureSelection.js'
 
-const dataContainer = loadData();
-const data = dataContainer.data;
+async function buildVisualization() {
+  const dataContainer = await loadData()
 
-generateDetailsBarChart(data);
-createScatterPlot(dataContainer);
-createTimeline(dataContainer);
+  setupFeatures(dataContainer)
+  generateDetailsBarChart(dataContainer)
+  createScatterPlot(dataContainer)
+  createTimeline(dataContainer)
+}
+
+buildVisualization()

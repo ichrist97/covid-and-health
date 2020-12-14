@@ -4,31 +4,34 @@
 
 //The observable constructor
 function Observable() {
-  this.observers = [];
+  this.observers = []
 
   this.subscribe = function (f) {
-    this.observers.push(f);
-  };
+    this.observers.push(f)
+  }
 
   this.unsubscribe = function (f) {
-    this.observers = this.observers.filter((x) => x !== f);
-  };
+    this.observers = this.observers.filter(x => x !== f)
+  }
 
   this.notify = function () {
-    this.observers.forEach((x) => x());
-  };
+    this.observers.forEach(x => x())
+  }
 }
 
 //An observable constructor wrapping a data object
 function ObservableData(defaultValue) {
-  Observable.call(this);
+  Observable.call(this)
 
-  this.value = defaultValue;
+  this.value = defaultValue
 
   this.update = function (value) {
-    this.value = value;
-    this.notify();
-  };
+    if (value == this.value) return
+    console.log('selected: ' + value)
+
+    this.value = value
+    this.notify()
+  }
 }
 
-export { ObservableData };
+export { ObservableData }
