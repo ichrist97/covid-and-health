@@ -1,9 +1,0 @@
-#barPlot {
-    background-color: navy;
-
-    grid-area: 4 / 2 / 11 / 3;
-}
-
-.bar {
-    fill: steelblue;
-  }

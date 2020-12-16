@@ -2,9 +2,17 @@ let svg
 let barsContainer
 
 // set the dimensions and margins of the graph
-const margin = { top: 20, right: 20, bottom: 30, left: 80 },
-  width = 380 - margin.left - margin.right,
-  height = 800 - margin.top - margin.bottom
+
+const container = document.querySelector('#factor-details')
+const offsetWidth = container.offsetWidth
+const offsetHeight = container.offsetHeight
+const margin = { top: 40, right: 40, bottom: 40, left: 100 },
+  width = offsetWidth - margin.left - margin.right,
+  height = offsetHeight - margin.top - margin.bottom
+
+// animations
+const scaleDuration = 800
+const moveDuration = 800
 
 function filterBarDataForCategory(data, category) {
   const filterData = []
@@ -27,7 +35,7 @@ function renderGraph(data, selectedFactor) {
   // append a 'group' element to 'svg'
   // moves the 'group' element to the top left margin
   svg = d3
-    .select('#details-bar-chart-container')
+    .select('#factor-details')
     .append('svg')
     .attr('width', width + margin.left + margin.right)
     .attr('height', height + margin.top + margin.bottom)
@@ -63,25 +71,14 @@ function renderBars(data) {
   )
 
   // append the rectangles for the bar chart
-  const update = barsContainer
+  barsContainer
     .selectAll('rect')
     .data(data, d => d)
+    .join('rect')
     .attr('class', 'bar')
+    // no bars before animation
     .attr('width', d => {
-      return x(d.value)
-    })
-    .attr('y', d => {
-      return y(d.country)
-    })
-    .attr('height', y.bandwidth())
-
-  update.exit().remove()
-  update
-    .enter()
-    .append('rect')
-    .attr('class', 'bar')
-    .attr('width', d => {
-      return x(d.value)
+      return x(0)
     })
     .attr('y', d => {
       return y(d.country)
@@ -94,6 +91,13 @@ function renderBars(data) {
 
   // add the y Axis
   barsContainer.append('g').call(d3.axisLeft(y))
+
+  // animation
+  const t = d3.transition().duration(scaleDuration).ease(d3.easeBackInOut)
+  barsContainer
+    .selectAll('rect')
+    .transition(t)
+    .attr('width', d => x(d.value))
 }
 
 function updateGraph(dataContainer) {

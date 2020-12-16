@@ -1,0 +1,9 @@
+#factor-details {
+  grid-area: 4 / 2 / 11 / 3;
+  height: 100%;
+  width: 100%;
+}
+
+.bar {
+  fill: steelblue;
+}

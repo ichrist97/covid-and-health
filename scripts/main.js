@@ -1,8 +1,8 @@
 import { loadData } from './data.js'
-import { generateDetailsBarChart } from './detailsBarChart.js'
+import { generateDetailsBarChart } from './factorDetails.js'
 import { createScatterPlot } from './scatterPlot.js'
 import { createTimeline } from './timeline.js'
-import { setupFactors } from './featureSelection.js'
+import { setupFactors } from './factorSelection.js'
 
 async function buildVisualization() {
   const dataContainer = await loadData()
