@@ -30,10 +30,13 @@ function setupFactors(dataContainer) {
         })
         // select clicked factor
         const factorRoot = getFactorRoot(event.target)
+        const factorName = factorRoot.getAttribute('data-factor')
         factorRoot.classList.add('checked')
         // update observable
-        const selectionValue = factorRoot.getAttribute('data-factor')
+        const selectionValue = factorName
         selectedFactor.update(selectionValue)
+        // update title for details section
+        document.querySelector('#factor-details-title').innerText = factorName
       })
     }
   })

@@ -2,6 +2,7 @@
 
 let svg
 let barsContainer
+let sortOrder = 'ascending'
 
 // set the dimensions and margins of the graph
 
@@ -28,7 +29,17 @@ function filterBarDataForCategory(data, category) {
       })
     }
   })
-  return filterData
+
+  // sort
+  //const sortedData = mergeSort(filterData)
+  const sortedData = filterData.sort((a, b) => {
+    if (sortOrder === 'ascending') {
+      return parseFloat(a.value) - parseFloat(b.value)
+    } else if (sortOrder === 'descending') {
+      return parseFloat(b.value) - parseFloat(a.value)
+    }
+  })
+  return sortedData
 }
 
 function renderGraph(data, selectedCountry) {
