@@ -23,7 +23,7 @@ async function loadData() {
     HEALTHSPENDINGS: 'healthSpendings',
   }
 
-  let selectedFactor = new ObservableData(FACTORS.HOSPITALBEDS)
+  let selectedFactor = new ObservableData(FACTORS.OBESITY)
 
   //The week of the year selected on the timeline
   let selectedWeek = new ObservableData(44)

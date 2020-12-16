@@ -1,62 +1,76 @@
 import { FACTORS } from './data.js'
 
-function setupFeatures(dataContainer) {
+function setupFactors(dataContainer) {
   const { selectedFactor } = dataContainer
-  const features = Object.values(FACTORS)
-  const container = document.querySelector('#health-features')
-  features.forEach(feature => {
-    // translation
-    let translation
-    switch (feature) {
-      case 'smoking':
-        translation = 'Raucher'
-        break
-      case 'obesity':
-        translation = 'Übergewicht'
-        break
-      case 'alcohol':
-        translation = 'Alkoholkonsum'
-        break
-      case 'hospitalBeds':
-        translation = 'Anzahl Krankenhäuserbetten'
-        break
-      case 'healthSpendings':
-        translation = 'Ausgaben Gesundheitswesen'
-        break
-      default:
-        translation = ''
-        break
-    }
+  const factors = Object.values(FACTORS)
+  const container = document.querySelector('#factor-container')
+  factors.forEach(factor => {
+    const translation = translateFactor(factor)
     // create options in dom
     if (translation) {
-      const item = document.createElement('input')
-      item.type = 'checkbox'
-      item.id = `${feature}-feature`
-      item.value = feature
+      const item = document.createElement('div')
+      item.className = 'factor'
+      item.setAttribute('data-factor', factor)
+      const text = document.createElement('p')
+      text.innerText = translation
+      item.appendChild(text)
       container.appendChild(item)
-      // item label
-      const label = document.createElement('label')
-      label.for = item.id
-      label.innerText = translation
-      container.appendChild(label)
 
-      // event listener for selecting features
-      item.addEventListener('change', event => {
+      // activate css for default selected factor
+      if (factor === selectedFactor.value) {
+        item.classList.add('checked')
+      }
+
+      // event listener for selecting factors
+      item.addEventListener('click', event => {
         // deselect all checkboxes
-        const allFeatures = container.querySelectorAll('input')
-        allFeatures.forEach(checkbox => {
-          checkbox.checked = false
+        const allFactors = container.querySelectorAll('.factor')
+        allFactors.forEach(factor => {
+          factor.classList.remove('checked')
         })
-        // select clicked checkbox
-        event.target.checked = true
+        // select clicked factor
+        const factorRoot = getFactorRoot(event.target)
+        factorRoot.classList.add('checked')
         // update observable
-        selectedFactor.update(event.target.value)
+        const selectionValue = factorRoot.getAttribute('data-factor')
+        selectedFactor.update(selectionValue)
       })
     }
   })
-
-  // default select first feature
-  container.querySelectorAll('input')[0].checked = true
 }
 
-export { setupFeatures }
+function getFactorRoot(element) {
+  // found root div of factor component
+  if (element.tagName === 'DIV' && element.className.includes('factor')) {
+    return element
+  } else {
+    return getFactorRoot(element.parentNode)
+  }
+}
+
+function translateFactor(factor) {
+  let translation
+  switch (factor) {
+    case 'smoking':
+      translation = 'Raucher'
+      break
+    case 'obesity':
+      translation = 'Übergewicht'
+      break
+    case 'alcohol':
+      translation = 'Alkoholkonsum'
+      break
+    case 'hospitalBeds':
+      translation = 'Anzahl Krankenbetten'
+      break
+    case 'healthSpendings':
+      translation = 'Ausgaben Gesundheitswesen'
+      break
+    default:
+      translation = ''
+      break
+  }
+  return translation
+}
+
+export { setupFactors }
