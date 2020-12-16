@@ -18,20 +18,21 @@ const scaleDuration = 800
 
 function filterBarDataForCategory(data, category) {
   const filterData = []
-  Object.values(data).forEach(country => {
+  for (let countryKey in data) {
+    const countryData = data[countryKey]
     // filter for countries containing the category
-    if (country.hasOwnProperty(category)) {
-      const countryFullName = country['name']
-      const categoryData = country[category]['value']
+    if (countryData.hasOwnProperty(category)) {
+      const countryFullName = countryData['name']
+      const categoryData = countryData[category]['value']
       filterData.push({
+        id: countryKey,
         country: countryFullName,
         value: categoryData,
       })
     }
-  })
+  }
 
   // sort
-  //const sortedData = mergeSort(filterData)
   const sortedData = filterData.sort((a, b) => {
     if (sortOrder === 'ascending') {
       return parseFloat(a.value) - parseFloat(b.value)
@@ -96,10 +97,10 @@ function renderBars(data, selectedCountry) {
     })
     .attr('height', y.bandwidth())
     // set country on bar for selecting
-    .attr('data-country', d => d.country)
+    .attr('data-country', d => d.id)
     // highlight selected country
     .attr('fill', d => {
-      return d.country === selectedCountry.value ? '#ff0000' : '#5a9af4'
+      return d.id === selectedCountry.value ? '#ff0000' : '#5a9af4'
     })
     // user hovers over bar
     .on('mouseenter', event => {
