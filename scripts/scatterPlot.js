@@ -135,7 +135,7 @@ function createScatterPlot(dataContainer) {
       .attr('cy', d => y(d.deaths))
       .on('mouseenter', showTooltip)
       .on('mouseleave', clearTooltip)
-      .transition(d3.easeBackOut)
+      .transition()
       .duration(scaleDuration)
       .attrTween('r', d => d3.interpolate(0, r((d.factor - bounds.min) / bounds.span)))
 

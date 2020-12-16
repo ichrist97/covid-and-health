@@ -1,3 +1,5 @@
+// TODO define colors as constants
+
 let svg
 let barsContainer
 
@@ -12,7 +14,6 @@ const margin = { top: 40, right: 40, bottom: 40, left: 100 },
 
 // animations
 const scaleDuration = 800
-const moveDuration = 800
 
 function filterBarDataForCategory(data, category) {
   const filterData = []
@@ -30,7 +31,7 @@ function filterBarDataForCategory(data, category) {
   return filterData
 }
 
-function renderGraph(data, selectedFactor) {
+function renderGraph(data, selectedCountry) {
   // append the svg object to the body of the page
   // append a 'group' element to 'svg'
   // moves the 'group' element to the top left margin
@@ -44,10 +45,10 @@ function renderGraph(data, selectedFactor) {
     .append('g')
     .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
 
-  renderBars(data)
+  renderBars(data, selectedCountry)
 }
 
-function renderBars(data) {
+function renderBars(data, selectedCountry) {
   // set the ranges
   let y = d3.scaleBand().range([height, 0]).padding(0.1)
   let x = d3.scaleLinear().range([0, width])
@@ -75,7 +76,6 @@ function renderBars(data) {
     .selectAll('rect')
     .data(data, d => d)
     .join('rect')
-    .attr('class', 'bar')
     // no bars before animation
     .attr('width', d => {
       return x(0)
@@ -84,6 +84,42 @@ function renderBars(data) {
       return y(d.country)
     })
     .attr('height', y.bandwidth())
+    // set country on bar for selecting
+    .attr('data-country', d => d.country)
+    // highlight selected country
+    .attr('fill', d => {
+      return d.country === selectedCountry.value ? '#ff0000' : '#5a9af4'
+    })
+    // user hovers over bar
+    .on('mouseenter', event => {
+      d3.select(event.target)
+        .attr('fill', d => {
+          // only change when bar is not selected
+          const country = event.target.getAttribute('data-country')
+          return country !== selectedCountry.value ? '#5ae0f4' : '#ff0000'
+        })
+        .style('cursor', 'pointer')
+    })
+    // user leaves bar
+    .on('mouseleave', event => {
+      d3.select(event.target)
+        .attr('fill', d => {
+          // only change when bar is not selected
+          const country = event.target.getAttribute('data-country')
+          return country !== selectedCountry.value ? '#5a9af4' : '#ff0000'
+        })
+        .style('cursor', 'default')
+    })
+    // user clicks bar
+    .on('click', event => {
+      // deselect all bars
+      d3.selectAll('rect').attr('fill', '#5a9af4')
+      // set clicked bar as selected
+      d3.select(event.target).attr('fill', '#ff0000')
+      // update observable
+      const country = event.target.getAttribute('data-country')
+      selectedCountry.update(country)
+    })
 
   // add the x Axis
   barsContainer.selectAll('g').remove()
@@ -101,17 +137,17 @@ function renderBars(data) {
 }
 
 function updateGraph(dataContainer) {
-  const { data, selectedFactor } = dataContainer
+  const { data, selectedFactor, selectedCountry } = dataContainer
   const factor = selectedFactor.value
   const filteredData = filterBarDataForCategory(data, factor)
-  renderBars(filteredData)
+  renderBars(filteredData, selectedCountry)
 }
 
 function generateDetailsBarChart(dataContainer) {
-  const { data, selectedFactor } = dataContainer
+  const { data, selectedFactor, selectedCountry } = dataContainer
   const factor = selectedFactor.value
   const filteredData = filterBarDataForCategory(data, factor)
-  renderGraph(filteredData)
+  renderGraph(filteredData, selectedCountry)
   //subscribe to factor observable
   selectedFactor.subscribe(() => updateGraph(dataContainer))
 }
