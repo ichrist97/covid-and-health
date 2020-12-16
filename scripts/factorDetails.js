@@ -155,13 +155,22 @@ function updateGraph(dataContainer) {
   renderBars(filteredData, selectedCountry)
 }
 
+function updateCountry(countryId) {
+  // deselect all bars
+  d3.selectAll('rect').attr('fill', '#5a9af4')
+  // set clicked bar as selected
+  d3.select(`[data-country=${countryId}]`).attr('fill', '#ff0000')
+}
+
 function generateDetailsBarChart(dataContainer) {
   const { data, selectedFactor, selectedCountry } = dataContainer
   const factor = selectedFactor.value
   const filteredData = filterBarDataForCategory(data, factor)
   renderGraph(filteredData, selectedCountry)
-  //subscribe to factor observable
+
+  //subscribe to  observables
   selectedFactor.subscribe(() => updateGraph(dataContainer))
+  selectedCountry.subscribe(() => updateCountry(selectedCountry.value))
 }
 
 export { generateDetailsBarChart }
