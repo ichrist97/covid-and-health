@@ -36,6 +36,22 @@ function DefaultTheme() {
 	this.background = '#232323'
 	//The color to display font in
 	this.font = '#ffffff'
+
+	//Values for padding, margins etc.
+
+	//The default duration for any transitions in ms
+	this.transitionDuration = 500
+
+	//The margin between the grid element and the content
+	this.margin = 30
+	this.marginLarge = 70
+
+	//The min and max scales for scatter plot points
+	this.minScatterPoint = 6
+	this.maxScatterPoint = 36
+
+	//Custom settings for the timeline
+	this.timelineIndicator = 10
 }
 
 //Define the default theme

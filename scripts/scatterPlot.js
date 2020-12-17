@@ -6,15 +6,6 @@ function createScatterPlot(dataContainer) {
 	// destructure data container
 	const { data, selectedFactor, selectedFilter, selectedWeek, selectedCountry } = dataContainer
 
-	//Define some properties for the layout of the plot
-	const margin = 40
-
-	const minScale = 8
-	const maxScale = 35
-
-	const scaleDuration = 800
-	const moveDuration = 800
-
 	//Find the maximum infections and deaths
 	const maxCases = Math.max(
 		...Object.values(data).map(x => {
@@ -30,15 +21,21 @@ function createScatterPlot(dataContainer) {
 
 	//Grab the svg element and store some properties for convenience
 	const svg = d3.select('#scatterPlot').select('.plot')
-	const width = parseFloat(svg.style('width')) - 2 * margin
-	const height = parseFloat(svg.style('height')) - 2 * margin
+	const width = parseFloat(svg.style('width')) - 2 * Theme().marginLarge
+	const height = parseFloat(svg.style('height')) - 2 * Theme().marginLarge
+
+	//And a scale axis for convenience
+	const r = d3.scaleLinear().domain([0, 1]).range([Theme().minScatterPoint, Theme().maxScatterPoint])
+
+	//Preapare the container hosting the data spheres
+	const container = svg.append('g').attr('transform', 'translate(' + Theme().marginLarge + ',' + Theme().marginLarge + ')')
 
 	//Help ourselves to some x axis
 	const x = d3.scaleLog().domain([1, maxCases]).range([0, width]).clamp(true).nice()
 
 	const xAxis = svg
 		.append('g')
-		.attr('transform', 'translate(' + margin + ',' + (height + margin) + ')')
+		.attr('transform', 'translate(' + Theme().marginLarge + ',' + (height + Theme().marginLarge + Theme().maxScatterPoint) + ')')
 		.call(d3.axisBottom(x).ticks(15, '.0f'))
 
 	xAxis.selectAll('line').style('stroke', Theme().axis)
@@ -50,18 +47,12 @@ function createScatterPlot(dataContainer) {
 
 	const yAxis = svg
 		.append('g')
-		.attr('transform', 'translate(' + margin + ',' + margin + ')')
+		.attr('transform', 'translate(' + (Theme().marginLarge - Theme().maxScatterPoint) + ',' + Theme().marginLarge + ')')
 		.call(d3.axisLeft(y).ticks(15, '.0f'))
 
 	yAxis.selectAll('line').style('stroke', Theme().axis)
 	yAxis.selectAll('path').style('stroke', Theme().axis)
 	yAxis.selectAll('text').style('fill', Theme().axis)
-
-	//And a scale axis for convenience
-	const r = d3.scaleLinear().domain([0, 1]).range([minScale, maxScale])
-
-	//Preapare the container hosting the data spheres
-	const container = svg.append('g').attr('transform', 'translate(' + margin + ',' + margin + ')')
 
 	//Cleans the data for usage in the scatter plot
 	function scatterPlotData() {
@@ -139,7 +130,7 @@ function createScatterPlot(dataContainer) {
 
 		update
 			.transition(d3.easeBackInOut)
-			.duration(moveDuration)
+			.duration(Theme().transitionDuration)
 			.attr('r', d => r((d.factor - bounds.min) / bounds.span))
 			.attr('cx', d => x(d.cases))
 			.attr('cy', d => y(d.deaths))
@@ -154,10 +145,10 @@ function createScatterPlot(dataContainer) {
 
 		enter
 			.transition()
-			.duration(scaleDuration)
+			.duration(Theme().transitionDuration)
 			.attrTween('r', d => d3.interpolate(0, r((d.factor - bounds.min) / bounds.span)))
 
-		update.exit().transition(d3.easeBackIn).duration(scaleDuration).attr('r', 0).remove()
+		update.exit().transition(d3.easeBackIn).duration(Theme().transitionDuration).attr('r', 0).remove()
 
 		update
 			.merge(enter)

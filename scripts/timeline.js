@@ -6,13 +6,6 @@ function createTimeline(dataContainer) {
 	// destructure data container
 	const { data, selectedWeek } = dataContainer
 
-	//Define some properties for the layout of the timeline
-	const margin = 40
-	const tickHeight = 20
-	const indicatorRadius = 12
-
-	const moveDuration = 800
-
 	//Find the start and end week of the data
 	const startWeek = Math.min(
 		...Object.values(data).map(x => {
@@ -35,28 +28,47 @@ function createTimeline(dataContainer) {
 
 	//Grab the svg element and store some properties for convenience
 	const svg = d3.select('#timeline').select('.plot')
-	const width = parseFloat(svg.style('width')) - 2 * margin
-	const height = parseFloat(svg.style('height')) - 2 * margin
+	const width = parseFloat(svg.style('width')) - 2 * Theme().margin
+	const height = parseFloat(svg.style('height'))
 
 	//Create an axis for displaying the timeline
 	const x = d3.scaleLinear().domain([startWeek, endWeek]).range([0, width])
 
 	const axis = svg
 		.append('g')
-		.attr('transform', 'translate(' + margin + ',' + (height + margin) + ')')
+		.attr('transform', 'translate(' + Theme().margin + ',' + height / 2 + ')')
 		.call(
 			d3
 				.axisTop(x)
-				.tickSize(tickHeight)
+				.tickSize(7)
 				.ticks(endWeek - startWeek)
 		)
 
 	axis.selectAll('line').style('stroke', Theme().axis)
 	axis.selectAll('path').style('stroke', Theme().axis)
-	axis.selectAll('text').style('fill', Theme().axis)
+	axis.selectAll('text').style('fill', Theme().axis).attr('y', -15)
 
-	//Create an indicator for the currently selected week
-	const idc = svg.append('circle').attr('r', indicatorRadius).attr('fill', Theme().buttonActive)
+	//const moths = d3.scaleBand().domain(['January', 'February', 'March', 'April', 'May']).range([0, width])
+	const moths = d3
+		.scaleTime()
+		.domain([new Date(2020, 0, 1), new Date(2020, 11, 31)])
+		.range([0, width])
+
+	const monthsAxis = svg
+		.append('g')
+		.attr('transform', 'translate(' + Theme().margin + ',' + height / 2 + 10 + ')')
+		.call(d3.axisBottom(moths).tickSize(0).ticks(12, '%B'))
+
+	//Adjust month label positions
+	monthsAxis
+		.selectAll('text')
+		.attr('x', width / 12 / 2)
+		.attr('y', 15)
+
+	//Create an indicator for the currently selected week with a fake shadow
+	const idc = svg.append('g')
+	idc.append('circle').attr('r', Theme().timelineIndicator).attr('fill', '#00000055').attr('cy', 2)
+	idc.append('circle').attr('r', Theme().timelineIndicator).attr('fill', Theme().buttonActive)
 
 	//Tracks whether the indicator was clicked
 	var isIdcDragged = false
@@ -65,7 +77,8 @@ function createTimeline(dataContainer) {
 	//Updates the scatter plot
 	function updateTimeline() {
 		const progress = (selectedWeek.value - startWeek) / weekDelta
-		idc.attr('cy', height + margin).attr('cx', margin + width * progress)
+		//idc.attr('cy', height / 2).attr('cx', Theme().margin + width * progress)
+		idc.attr('transform', 'translate(' + (Theme().margin + width * progress) + ',' + height / 2 + ')')
 	}
 
 	//Sets the week depending on the mouse position over the timeline
@@ -73,8 +86,8 @@ function createTimeline(dataContainer) {
 		const rect = svg.node().getBoundingClientRect()
 		x = x - rect.left
 
-		const width = rect.width - margin * 2
-		const dist = (x - margin) / width
+		const width = rect.width - Theme().margin * 2
+		const dist = (x - Theme().margin) / width
 
 		const weekPoint = Math.round(dist * weekDelta + startWeek)
 		const week = Math.max(Math.min(weekPoint, endWeek), startWeek)
