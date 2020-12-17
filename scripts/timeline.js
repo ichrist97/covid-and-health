@@ -1,27 +1,22 @@
 /// <reference path='d3.js' />
 
+import { theme, styleAxis } from './theme.js'
+
 function createTimeline(dataContainer) {
-  // destructure data container
-  const { data, selectedWeek } = dataContainer
+	// destructure data container
+	const { data, selectedWeek } = dataContainer
 
-  //Define some properties for the layout of the timeline
-  const margin = 40
-  const tickHeight = 20
-  const indicatorRadius = 12
+	//Find the start and end week of the data
+	const startWeek = Math.min(
+		...Object.values(data).map(x => {
+			return Math.min(...Object.keys(x.covid))
+		})
+	)
 
-  const moveDuration = 800
+	//Instead of the actual end week, let's just display all weeks of 2020
+	const endWeek = 53
 
-  //Find the start and end week of the data
-  const startWeek = Math.min(
-    ...Object.values(data).map(x => {
-      return Math.min(...Object.keys(x.covid))
-    })
-  )
-
-  //Instead of the actual end week, let's just display all weeks of 2020
-  const endWeek = 53
-
-  /*
+	/*
   const endWeek = Math.max(
     ...Object.values(data).map(x => {
       return Math.max(...Object.keys(x.covid))
@@ -29,66 +24,91 @@ function createTimeline(dataContainer) {
   )
   */
 
-  const weekDelta = endWeek - startWeek
+	const weekDelta = endWeek - startWeek
 
-  //Grab the svg element and store some properties for convenience
-  const svg = d3.select('#timeline').select('.plot')
-  const width = parseFloat(svg.style('width')) - 2 * margin
-  const height = parseFloat(svg.style('height')) - 2 * margin
+	//Grab the svg element and store some properties for convenience
+	const svg = d3.select('#timeline').select('.plot')
+	const width = parseFloat(svg.style('width')) - 2 * theme().margin
+	const height = parseFloat(svg.style('height'))
 
-  //Create an axis for displaying the timeline
-  const x = d3.scaleLinear().domain([startWeek, endWeek]).range([0, width])
+	//Create an axis for displaying the timeline
+	const x = d3.scaleLinear().domain([startWeek, endWeek]).range([0, width])
 
-  svg
-    .append('g')
-    .attr('transform', 'translate(' + margin + ',' + (height + margin) + ')')
-    .call(
-      d3
-        .axisTop(x)
-        .tickSize(tickHeight)
-        .ticks(endWeek - startWeek)
-    )
+	const axis = svg
+		.append('g')
+		.attr('transform', 'translate(' + theme().margin + ',' + height / 2 + ')')
+		.call(
+			d3
+				.axisTop(x)
+				.tickSize(7)
+				.tickValues(d3.range(weekDelta / 2 + 1).map(x => startWeek + x * 2))
+		)
 
-  //Create an indicator for the currently selected week
-  const idc = svg.append('circle').attr('r', indicatorRadius).classed('indicator', true)
+	axis.selectAll('text').attr('y', -15)
+	styleAxis(axis)
 
-  //Tracks whether the indicator was clicked
-  var isIdcDragged = false
-  idc.on('mousedown', () => (isIdcDragged = true))
+	//const moths = d3.scaleBand().domain(['January', 'February', 'March', 'April', 'May']).range([0, width])
+	const moths = d3
+		.scaleTime()
+		.domain([new Date(2020, 0, 1), new Date(2020, 11, 31)])
+		.range([0, width])
 
-  //Updates the scatter plot
-  function updateTimeline() {
-    const progress = (selectedWeek.value - startWeek) / weekDelta
-    idc.attr('cy', height + margin).attr('cx', margin + width * progress)
-  }
+	const monthsAxis = svg
+		.append('g')
+		.attr('transform', 'translate(' + theme().margin + ',' + height / 2 + 10 + ')')
+		.call(d3.axisBottom(moths).tickSize(0).ticks(12, '%B'))
 
-  //Sets the week depending on the mouse position over the timeline
-  function setWeekFromMouseX(x) {
-    const rect = svg.node().getBoundingClientRect()
-    x = x - rect.left
+	styleAxis(monthsAxis)
 
-    const width = rect.width - margin * 2
-    const dist = (x - margin) / width
+	//Adjust month label positions
+	monthsAxis
+		.selectAll('text')
+		.attr('x', width / 12 / 2)
+		.attr('y', 15)
 
-    const weekPoint = Math.round(dist * weekDelta + startWeek)
-    const week = Math.max(Math.min(weekPoint, endWeek), startWeek)
-    selectedWeek.update(week)
-  }
+	//Create an indicator for the currently selected week with a fake shadow
+	const idc = svg.append('g')
+	idc.append('circle').attr('r', theme().timelineIndicator).attr('fill', '#00000055').attr('cy', 2)
+	idc.append('circle').attr('r', theme().timelineIndicator).attr('fill', theme().axis)
 
-  //Listen to clicks on the timeline
-  d3.select('#timeline').on('click', e => {
-    setWeekFromMouseX(e.clientX)
-  })
+	//Tracks whether the indicator was clicked
+	var isIdcDragged = false
+	idc.on('mousedown', () => (isIdcDragged = true))
 
-  d3.select('#timeline').on('mousemove', e => {
-    if (e.buttons == 0) isIdcDragged = false
-    if (isIdcDragged) setWeekFromMouseX(e.clientX)
-  })
+	//Updates the scatter plot
+	function updateTimeline() {
+		const progress = (selectedWeek.value - startWeek) / weekDelta
+		//idc.attr('cy', height / 2).attr('cx', Theme().margin + width * progress)
+		idc.attr('transform', 'translate(' + (theme().margin + width * progress) + ',' + height / 2 + ')')
+	}
 
-  //Subscribe the update to global events
-  selectedWeek.subscribe(updateTimeline)
+	//Sets the week depending on the mouse position over the timeline
+	function setWeekFromMouseX(x) {
+		const rect = svg.node().getBoundingClientRect()
+		x = x - rect.left
 
-  updateTimeline()
+		const width = rect.width - theme().margin * 2
+		const dist = (x - theme().margin) / width
+
+		const weekPoint = Math.round(dist * weekDelta + startWeek)
+		const week = Math.max(Math.min(weekPoint, endWeek), startWeek)
+		selectedWeek.update(week)
+	}
+
+	//Listen to clicks on the timeline
+	d3.select('#timeline').on('click', e => {
+		setWeekFromMouseX(e.clientX)
+	})
+
+	d3.select('#timeline').on('mousemove', e => {
+		if (e.buttons == 0) isIdcDragged = false
+		if (isIdcDragged) setWeekFromMouseX(e.clientX)
+	})
+
+	//Subscribe the update to global events
+	selectedWeek.subscribe(updateTimeline)
+
+	updateTimeline()
 }
 
 export { createTimeline }

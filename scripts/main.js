@@ -1,16 +1,19 @@
 import { loadData } from './data.js'
-import { generateDetailsBarChart } from './detailsBarChart.js'
+import { generateDetailsBarChart } from './factorDetails.js'
 import { createScatterPlot } from './scatterPlot.js'
 import { createTimeline } from './timeline.js'
-import { setupFeatures } from './featureSelection.js'
+import { setupFactors } from './factorSelection.js'
 
 async function buildVisualization() {
-  const dataContainer = await loadData()
+	const dataContainer = await loadData()
 
-  setupFeatures(dataContainer)
-  generateDetailsBarChart(dataContainer)
-  createScatterPlot(dataContainer)
-  createTimeline(dataContainer)
+	setupFactors(dataContainer)
+	generateDetailsBarChart(dataContainer)
+	createScatterPlot(dataContainer)
+	createTimeline(dataContainer)
+
+	// deactivate loading screen when everything is finished rendering
+	document.querySelector('#loading').style.display = 'none'
 }
 
 buildVisualization()

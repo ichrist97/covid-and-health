@@ -1,7 +1,5 @@
 #scatterPlot {
-  background-color: #333333;
-
-  grid-area: 1 / 1 / 8 / 2;
+	grid-area: 1 / 1 / 8 / 2;
 }
 
 /* 
@@ -9,6 +7,5 @@ Tooltip styling for hover over information displays
 */
 
 .tooltip {
-  font-weight: bold;
-  fill: red;
+	font-weight: bold;
 }

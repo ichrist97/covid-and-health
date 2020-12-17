@@ -1,168 +1,264 @@
 /// <reference path='d3.js' />
 
+import { theme, styleAxis } from './theme.js'
+
 function createScatterPlot(dataContainer) {
-  // destructure data container
-  const { data, selectedFactor, selectedFilter, selectedWeek, selectedCountry } = dataContainer
+	// destructure data container
+	const { data, selectedFactor, selectedFilter, selectedWeek, selectedCountry } = dataContainer
 
-  //Define some properties for the layout of the plot
-  const margin = 40
+	//Find the maximum infections and deaths
+	const maxCases = Math.max(
+		...Object.values(data).map(x => {
+			return Math.max(...Object.values(x.covid).map(y => y.cases))
+		})
+	)
 
-  const minScale = 8
-  const maxScale = 35
+	const maxDeaths = Math.max(
+		...Object.values(data).map(x => {
+			return Math.max(...Object.values(x.covid).map(y => y.deaths))
+		})
+	)
 
-  const scaleDuration = 800
-  const moveDuration = 800
+	//Grab the svg element and store some properties for convenience
+	const svg = d3.select('#scatterPlot').select('.plot')
+	const width = parseFloat(svg.style('width')) - theme().marginLarge - theme().margin
+	const height = parseFloat(svg.style('height')) - theme().marginLarge - theme().margin
 
-  //Find the maximum infections and deaths
-  const maxCases = Math.max(
-    ...Object.values(data).map(x => {
-      return Math.max(...Object.values(x.covid).map(y => y.cases))
-    })
-  )
+	//And a scale axis for convenience
+	const r = d3.scaleLinear().domain([0, 1]).range([theme().minScatterPoint, theme().maxScatterPoint])
 
-  const maxDeaths = Math.max(
-    ...Object.values(data).map(x => {
-      return Math.max(...Object.values(x.covid).map(y => y.deaths))
-    })
-  )
+	//Preapare the container hosting the data spheres
+	const container = svg.append('g').attr('transform', 'translate(' + theme().marginLarge + ',' + theme().margin + ')')
 
-  //Grab the svg element and store some properties for convenience
-  const svg = d3.select('#scatterPlot').select('.plot')
-  const width = parseFloat(svg.style('width')) - 2 * margin
-  const height = parseFloat(svg.style('height')) - 2 * margin
+	//Help ourselves to some x axis
+	const x = d3.scaleLog().domain([1, maxCases]).range([0, width]).clamp(true).nice()
 
-  //Help ourselves to some x axis
-  const x = d3.scaleLog().domain([1, maxCases]).range([0, width]).clamp(true).nice()
+	const xAxis = svg
+		.append('g')
+		.attr('transform', 'translate(' + theme().marginLarge + ',' + (height + theme().margin + theme().maxScatterPoint) + ')')
+		.call(d3.axisBottom(x).ticks(12, '.0f'))
 
-  svg
-    .append('g')
-    .attr('transform', 'translate(' + margin + ',' + (height + margin) + ')')
-    .call(d3.axisBottom(x).ticks(15, '.0f'))
+	styleAxis(xAxis)
 
-  //Basically the same for the y axis
-  const y = d3.scaleLog().domain([1, maxDeaths]).range([height, 0]).clamp(true).nice()
+	//Basically the same for the y axis
+	const y = d3.scaleLog().domain([1, maxDeaths]).range([height, 0]).clamp(true).nice()
 
-  svg
-    .append('g')
-    .attr('transform', 'translate(' + margin + ',' + margin + ')')
-    .call(d3.axisLeft(y).ticks(15, '.0f'))
+	const yAxis = svg
+		.append('g')
+		.attr('transform', 'translate(' + (theme().marginLarge - theme().maxScatterPoint) + ',' + theme().margin + ')')
+		.call(d3.axisLeft(y).ticks(12, '.0f'))
 
-  //And a scale axis for convenience
-  const r = d3.scaleLinear().domain([0, 1]).range([minScale, maxScale])
+	styleAxis(yAxis)
 
-  //Preapare the container hosting the data spheres
-  const container = svg.append('g').attr('transform', 'translate(' + margin + ',' + margin + ')')
+	//Builds the axis lables for the scatter plot
+	function buildAxisLabels() {
+		//Remove old labels
+		svg.selectAll('.axisLabel').remove()
 
-  //Cleans the data for usage in the scatter plot
-  function scatterPlotData() {
-    const out = []
-    const week = selectedWeek.value
+		//Build the x axis label
+		const xLabel = svg
+			.append('g')
+			.classed('axisLabel', true)
+			//.attr('transform', 'translate(' + (theme().marginLarge + width / 2) + ',' + (height + 2 * theme().marginLarge - 12) + ')')
+			.attr(
+				'transform',
+				'translate(' + (theme().marginLarge + width) + ',' + (height + theme().margin + theme().maxScatterPoint - 15) + ')'
+			)
+			.append('text')
+			.attr('fill', theme().font)
+			.attr('dominant-baseline', 'hanging')
+			.attr('text-anchor', 'end')
+			.attr('fill', theme().axis)
+			.style('font-size', theme().fontSizeAxis)
+			.text('covid-19 infections per 100.000 capita')
 
-    Object.keys(data).forEach(x => {
-      const value = data[x]
+		//Build the y axis label
+		const yLabel = svg
+			.append('g')
+			.classed('axisLabel', true)
+			.attr('transform', 'translate(' + (theme().marginLarge - theme().maxScatterPoint + 10) + ',' + theme().margin + ')')
+			.append('text')
+			.attr('fill', theme().font)
+			.attr('dominant-baseline', 'hanging')
+			.attr('text-anchor', 'start')
+			.attr('fill', theme().axis)
+			.style('font-size', theme().fontSizeAxis)
 
-      if (!(selectedFactor.value in value)) return
-      const factor = value[selectedFactor.value]
+		yLabel.append('tspan').text('covid-19 deaths')
+		yLabel
+			.append('tspan')
+			.attr('x', 0)
+			.attr('dy', theme().fontSizeAxis + 3)
+			.text('per 100.000 capita')
+	}
 
-      if (!(week in value.covid)) return
-      const covid = value.covid[week]
+	//Builds the legend for the scatter plot
+	function buildLegend(bounds) {
+		//First remove the old legend
+		svg.select('.legend').remove()
 
-      out.push({
-        country: x,
-        name: value.name,
-        cases: covid.cases,
-        deaths: covid.deaths,
-        factor: factor.value,
-      })
-    })
+		//Let's put everythin in a group for easy placement
+		const legend = svg
+			.append('g')
+			.attr('transform', 'translate(' + (width + theme().marginLarge) + ',' + theme().margin + ')')
+			.classed('legend', true)
 
-    return out
-  }
+		const count = theme().scatterLegendCount
+		const size = theme().scatterLegendSize
 
-  //Findes the maximum and minimum factors in the data
-  function factorMinMax(data) {
-    const min = Math.min(...data.map(x => x.factor))
-    const max = Math.max(...data.map(x => x.factor))
-    return { min: min, max: max, span: max - min }
-  }
+		//Now add elements for each legend entrie
+		const elems = legend
+			.selectAll(null)
+			.data(d3.range(count))
+			.enter()
+			.append('g')
+			.attr('transform', d => 'translate(0,' + d * size * 3 + ')')
 
-  //Computes the fill color for a dot from it's factor value
-  function dotFill(value, bounds) {
-    //For now we just blend from black to white
-    const c = (1 - (value - bounds.min) / bounds.span) * 255
-    return `rgb(${c}, ${c}, ${c})`
-  }
+		elems
+			.append('rect')
+			.attr('x', -size / 2)
+			.attr('y', -size / 2)
+			.attr('width', size)
+			.attr('height', size)
+			.attr('fill', d => theme().primaryBlend(d / (count - 1)))
 
-  //Compues the sort order for two countries
-  function compareCountries(a, b) {
-    if (a.country == selectedCountry.value) return 1
-    if (b.country == selectedCountry.value) return -1
-    return b.factor - a.factor
-  }
+		elems
+			.append('text')
+			.attr('dominant-baseline', 'middle')
+			.attr('text-anchor', 'end')
+			.attr('x', -size)
+			.attr('dy', 1)
+			.attr('fill', theme().font)
+			.style('font-size', theme().fontSizeAxis)
+			.text(d => Math.round(bounds.min + bounds.span * (d / (count - 1))))
+	}
 
-  //Shows a tooltip for the given country
-  function showTooltip(e, d) {
-    container
-      .append('text')
-      .classed('tooltip', true)
-      .text(d.name)
-      .attr('x', x(d.cases))
-      .attr('y', y(d.deaths))
-      .attr('text-anchor', 'middle')
-      .attr('dominant-baseline', 'central')
-  }
+	//Cleans the data for usage in the scatter plot
+	function scatterPlotData() {
+		const out = []
+		const week = selectedWeek.value
 
-  //Removes all tooltips
-  function clearTooltip() {
-    container.selectAll('.tooltip').remove()
-  }
+		Object.keys(data).forEach(x => {
+			const value = data[x]
 
-  //Shows the cleaned data in the plot
-  function showScatterPlot(data, bounds) {
-    const update = container.selectAll('circle').data(data, x => x.country)
+			if (!(selectedFactor.value in value)) return
+			const factor = value[selectedFactor.value]
 
-    update
-      .transition(d3.easeBackInOut)
-      .duration(moveDuration)
-      .attr('r', d => r((d.factor - bounds.min) / bounds.span))
-      .attr('cx', d => x(d.cases))
-      .attr('cy', d => y(d.deaths))
+			if (!(week in value.covid)) return
+			const covid = value.covid[week]
 
-    update
-      .enter()
-      .append('circle')
-      .attr('cx', d => x(d.cases))
-      .attr('cy', d => y(d.deaths))
-      .on('mouseenter', showTooltip)
-      .on('mouseleave', clearTooltip)
-      .transition(d3.easeBackOut)
-      .duration(scaleDuration)
-      .attrTween('r', d => d3.interpolate(0, r((d.factor - bounds.min) / bounds.span)))
+			out.push({
+				country: x,
+				name: value.name,
+				cases: covid.cases,
+				deaths: covid.deaths,
+				factor: factor.value,
+			})
+		})
 
-    update.exit().transition(d3.easeBackIn).duration(scaleDuration).attr('r', 0).remove()
+		return out
+	}
 
-    container
-      .selectAll('circle')
-      .sort(compareCountries)
-      .style('fill', d =>
-        d.country == selectedCountry.value ? '#0055ff' : dotFill(d.factor, bounds)
-      )
-      .on('click', (e, d) => selectedCountry.update(d.country))
-  }
+	//Finds the maximum and minimum factors in the data
+	function factorMinMax(data) {
+		const min = Math.min(...data.map(x => x.factor))
+		const max = Math.max(...data.map(x => x.factor))
+		return { min: min, max: max, span: max - min }
+	}
 
-  //Updates the scatter plot
-  function updateScatterPlot() {
-    const data = scatterPlotData()
-    const bounds = factorMinMax(data)
-    showScatterPlot(data, bounds)
-  }
+	//Computes the fill color for a dot from it's factor value
+	function dotFill(value, bounds, country = null) {
+		if (country == selectedCountry.value) {
+			return theme().selection
+		}
 
-  //Subscribe the update to global events
-  selectedCountry.subscribe(updateScatterPlot)
-  selectedWeek.subscribe(updateScatterPlot)
-  selectedFactor.subscribe(updateScatterPlot)
+		const t = 1 - (value - bounds.min) / bounds.span
+		return theme().primaryBlend(t)
+	}
 
-  updateScatterPlot()
+	//Compues the sort order for two countries
+	function compareCountries(a, b) {
+		if (a.country == selectedCountry.value) return 1
+		if (b.country == selectedCountry.value) return -1
+		return b.factor - a.factor
+	}
+
+	//Shows a tooltip for the given country
+	function showTooltip(e, d) {
+		container
+			.append('text')
+			.classed('tooltip', true)
+			.text(d.name)
+			.attr('x', x(d.cases))
+			.attr('y', y(d.deaths))
+			.attr('text-anchor', 'middle')
+			.attr('dominant-baseline', 'central')
+			.attr('fill', theme().font)
+	}
+
+	//Removes all tooltips
+	function clearTooltip() {
+		container.selectAll('.tooltip').remove()
+	}
+
+	//Shows the cleaned data in the plot
+	function showScatterPlot(data, bounds) {
+		const update = container.selectAll('circle').data(data, x => x.country)
+
+		update.filter(d => d.country == selectedCountry.value).style('fill', theme().selection)
+
+		update
+			.transition(d3.easeBackInOut)
+			.duration(theme().transitionDuration)
+			.attr('r', d => r((d.factor - bounds.min) / bounds.span))
+			.attr('cx', d => x(d.cases))
+			.attr('cy', d => y(d.deaths))
+			.style('fill', d => dotFill(d.factor, bounds, d.country))
+
+		const enter = update
+			.enter()
+			.append('circle')
+			.attr('cx', d => x(d.cases))
+			.attr('cy', d => y(d.deaths))
+			.style('fill', d => dotFill(d.factor, bounds, d.country))
+
+		enter
+			.transition()
+			.duration(theme().transitionDuration)
+			.attrTween('r', d => d3.interpolate(0, r((d.factor - bounds.min) / bounds.span)))
+
+		update.exit().transition(d3.easeBackIn).duration(theme().transitionDuration).attr('r', 0).remove()
+
+		update
+			.merge(enter)
+			.sort(compareCountries)
+			.on('click', (e, d) => selectedCountry.update(d.country))
+			.on('mouseenter', (e, d) => {
+				showTooltip(e, d)
+				d3.select(e.currentTarget).style('fill', theme().hover)
+			})
+			.on('mouseleave', (e, d) => {
+				clearTooltip(e, d)
+				d3.select(e.currentTarget).style('fill', dotFill(d.factor, bounds, d.country))
+			})
+	}
+
+	//Updates the scatter plot
+	function updateScatterPlot() {
+		const data = scatterPlotData()
+		const bounds = factorMinMax(data)
+
+		showScatterPlot(data, bounds)
+		buildLegend(bounds)
+		buildAxisLabels()
+	}
+
+	//Subscribe the update to global events
+	selectedCountry.subscribe(updateScatterPlot)
+	selectedWeek.subscribe(updateScatterPlot)
+	selectedFactor.subscribe(updateScatterPlot)
+
+	updateScatterPlot()
 }
 
 export { createScatterPlot }
