@@ -3,7 +3,8 @@
 import { insertCovidData, insertOECDData } from './dataCleaning.js'
 import { ObservableData } from './observer.js'
 
-let FACTORS
+//Define enumerations for properties
+let FACTORS, OVERVIEWS, FILTERS
 
 async function loadData() {
   //Variables for the current state of the visualization
@@ -29,11 +30,11 @@ async function loadData() {
   let selectedWeek = new ObservableData(44)
 
   //The information selected for display on the overview line chart
-  const OVERVIEWS = { INFECTIONS: 'infections', DEATHS: 'deaths' }
+  OVERVIEWS = { INFECTIONS: 'infections', DEATHS: 'deaths' }
   let selectedOverview = new ObservableData(OVERVIEWS.INFECTIONS)
 
   //The countries selected for display
-  const FILTERS = { ALL: 'all' }
+  FILTERS = { ALL: 'all' }
   let selectedFilter = new ObservableData(FILTERS.ALL)
 
   //Global varaibles to be used by charts and other visualization components
@@ -72,4 +73,4 @@ async function loadData() {
   }
 }
 
-export { loadData, FACTORS }
+export { loadData, FACTORS, OVERVIEWS, FILTERS }
