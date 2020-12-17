@@ -46,9 +46,16 @@ function DefaultTheme() {
 	this.margin = 30
 	this.marginLarge = 70
 
+	//Different font sizes
+	this.fontSizeSmall = 14
+
 	//The min and max scales for scatter plot points
 	this.minScatterPoint = 6
 	this.maxScatterPoint = 36
+
+	//The count and size of scatterplot legend elements
+	this.scatterLegendCount = 5
+	this.scatterLegendSize = 12
 
 	//Custom settings for the timeline
 	this.timelineIndicator = 8

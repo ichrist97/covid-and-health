@@ -54,6 +54,47 @@ function createScatterPlot(dataContainer) {
 	yAxis.selectAll('path').style('stroke', Theme().axis)
 	yAxis.selectAll('text').style('fill', Theme().axis)
 
+	//Builds the legend for the scatter plot
+	function buildLegend(bounds) {
+		//First remove the old legend
+		svg.select('.legend').remove()
+
+		//Let's put everythin in a group for easy placement
+		const legend = svg
+			.append('g')
+			.attr('transform', 'translate(' + (width + 2 * Theme().marginLarge - Theme().margin) + ',' + Theme().margin + ')')
+			.classed('legend', true)
+
+		const count = Theme().scatterLegendCount
+		const size = Theme().scatterLegendSize
+
+		//Now add elements for each legend entrie
+		const elems = legend
+			.selectAll(null)
+			.data(d3.range(count))
+			.enter()
+			.append('g')
+			.attr('transform', d => 'translate(0,' + d * size * 3 + ')')
+
+		elems
+			.append('rect')
+			.attr('x', -size / 2)
+			.attr('y', -size / 2)
+			.attr('width', size)
+			.attr('height', size)
+			.attr('fill', d => Theme().primaryBlend(d / (count - 1)))
+
+		elems
+			.append('text')
+			.attr('dominant-baseline', 'middle')
+			.attr('text-anchor', 'end')
+			.attr('x', -size)
+			.attr('dy', 1)
+			.attr('fill', Theme().font)
+			.style('font-size', Theme().fontSizeSmall)
+			.text(d => Math.round(bounds.min + bounds.span * (d / (count - 1))))
+	}
+
 	//Cleans the data for usage in the scatter plot
 	function scatterPlotData() {
 		const out = []
@@ -80,7 +121,7 @@ function createScatterPlot(dataContainer) {
 		return out
 	}
 
-	//Findes the maximum and minimum factors in the data
+	//Finds the maximum and minimum factors in the data
 	function factorMinMax(data) {
 		const min = Math.min(...data.map(x => x.factor))
 		const max = Math.max(...data.map(x => x.factor))
@@ -169,6 +210,7 @@ function createScatterPlot(dataContainer) {
 		const data = scatterPlotData()
 		const bounds = factorMinMax(data)
 		showScatterPlot(data, bounds)
+		buildLegend(bounds)
 	}
 
 	//Subscribe the update to global events
