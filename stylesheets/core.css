@@ -50,6 +50,8 @@ Global styling for the grid and grid elements
 	width: calc(100% - 20px);
 	height: calc(100% - 20px);
 
+	border-radius: 25px;
+
 	left: 10px;
 	right: 10px;
 	top: 10px;
@@ -60,6 +62,9 @@ Global styling for the grid and grid elements
 	position: absolute;
 	color: #ffffff44;
 	font-size: 20px;
+	left: 20px;
+	top: 20px;
+	pointer-events: none;
 }
 
 .plot {
