@@ -1,20 +1,17 @@
-// TODO define colors as constants
+import { theme } from './theme.js'
+import { factorExplanation } from './data.js'
 
 let svg
 let barsContainer
 let sortOrder = 'ascending' // default
 
 // set the dimensions and margins of the graph
-
 const container = document.querySelector('#factor-details')
 const offsetWidth = container.offsetWidth
 const offsetHeight = container.offsetHeight
-const margin = { top: 40, right: 40, bottom: 40, left: 100 },
+const margin = { top: 40, right: 40, bottom: 60, left: 100 },
 	width = offsetWidth - margin.left - margin.right,
 	height = offsetHeight - margin.top - margin.bottom
-
-// animations
-const scaleDuration = 800
 
 function filterBarDataForCategory(data, category) {
 	const filterData = []
@@ -43,7 +40,7 @@ function filterBarDataForCategory(data, category) {
 	return sortedData
 }
 
-function renderGraph(data, selectedCountry) {
+function renderGraph(data, selectedCountry, selectedFactor) {
 	// append the svg object to the body of the page
 	// append a 'group' element to 'svg'
 	// moves the 'group' element to the top left margin
@@ -55,13 +52,13 @@ function renderGraph(data, selectedCountry) {
 
 	barsContainer = svg.append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
 
-	renderBars(data, selectedCountry)
+	renderBars(data, selectedCountry, selectedFactor)
 }
 
-function renderBars(data, selectedCountry) {
+function renderBars(data, selectedCountry, selectedFactor) {
 	// set the ranges
-	let y = d3.scaleBand().range([height, 0]).padding(0.1)
-	let x = d3.scaleLinear().range([0, width])
+	let yScale = d3.scaleBand().range([height, 0]).padding(0.1)
+	let xScale = d3.scaleLinear().range([0, width])
 
 	// format the data to positive values
 	data.forEach(d => {
@@ -69,13 +66,13 @@ function renderBars(data, selectedCountry) {
 	})
 
 	// Scale the range of the data in the domains
-	x.domain([
+	xScale.domain([
 		0,
 		d3.max(data, d => {
 			return d.value
 		}),
 	])
-	y.domain(
+	yScale.domain(
 		data.map(d => {
 			return d.country
 		})
@@ -88,17 +85,17 @@ function renderBars(data, selectedCountry) {
 		.join('rect')
 		// no bars before animation
 		.attr('width', d => {
-			return x(0)
+			return xScale(0)
 		})
 		.attr('y', d => {
-			return y(d.country)
+			return yScale(d.country)
 		})
-		.attr('height', y.bandwidth())
+		.attr('height', yScale.bandwidth())
 		// set country on bar for selecting
 		.attr('data-country', d => d.id)
 		// highlight selected country
 		.attr('fill', d => {
-			return d.id === selectedCountry.value ? '#ff0000' : '#5a9af4'
+			return d.id === selectedCountry.value ? theme().selection : '#5a9af4'
 		})
 		// user hovers over bar
 		.on('mouseenter', event => {
@@ -106,7 +103,7 @@ function renderBars(data, selectedCountry) {
 				.attr('fill', d => {
 					// only change when bar is not selected
 					const country = event.target.getAttribute('data-country')
-					return country !== selectedCountry.value ? '#5ae0f4' : '#ff0000'
+					return country !== selectedCountry.value ? theme().hover : theme().selection
 				})
 				.style('cursor', 'pointer')
 		})
@@ -116,7 +113,7 @@ function renderBars(data, selectedCountry) {
 				.attr('fill', d => {
 					// only change when bar is not selected
 					const country = event.target.getAttribute('data-country')
-					return country !== selectedCountry.value ? '#5a9af4' : '#ff0000'
+					return country !== selectedCountry.value ? '#5a9af4' : theme().selection
 				})
 				.style('cursor', 'default')
 		})
@@ -125,50 +122,65 @@ function renderBars(data, selectedCountry) {
 			// deselect all bars
 			d3.selectAll('rect').attr('fill', '#5a9af4')
 			// set clicked bar as selected
-			d3.select(event.target).attr('fill', '#ff0000')
+			d3.select(event.target).attr('fill', theme().selection)
 			// update observable
 			const country = event.target.getAttribute('data-country')
 			selectedCountry.update(country)
 		})
 
-	// add the x Axis
+	// add the xAxis
 	barsContainer.selectAll('g').remove()
-	barsContainer.append('g').attr('transform', `translate(0,${height})`).call(d3.axisBottom(x))
+	const xAxisGenerator = d3.axisBottom(xScale).ticks(3)
+	barsContainer.append('g').attr('transform', `translate(0,${height})`).call(xAxisGenerator)
 
-	// add the y Axis
-	barsContainer.append('g').call(d3.axisLeft(y))
+	// xAxis label
+	const label = factorExplanation[selectedFactor.value]
+	// remove old label
+	svg.selectAll('[is-label]').remove()
+	// new label
+	svg
+		.append('text')
+		.attr('is-label', true)
+		.attr('transform', `translate(${width * 1.6},${height + margin.top + 40})`)
+		.style('text-anchor', 'middle')
+		.style('fill', 'white')
+		.style('font-size', theme().fontSizeAxis)
+		.text(label)
+
+	// add the yAxis
+	barsContainer.append('g').call(d3.axisLeft(yScale))
 
 	// animation
-	const t = barsContainer.transition().duration(scaleDuration).ease(d3.easePolyOut)
+	const t = barsContainer.transition().duration(theme().transitionDuration).ease(d3.easePolyOut)
 	barsContainer
 		.selectAll('rect')
 		.transition(t)
-		.attr('width', d => x(d.value))
+		.attr('width', d => xScale(d.value))
 }
 
 function updateGraph(dataContainer) {
 	const { data, selectedFactor, selectedCountry } = dataContainer
 	const factor = selectedFactor.value
 	const filteredData = filterBarDataForCategory(data, factor)
-	renderBars(filteredData, selectedCountry)
+	renderBars(filteredData, selectedCountry, selectedFactor)
 }
 
 function updateCountry(countryId) {
 	// deselect all bars
 	d3.selectAll('rect').attr('fill', '#5a9af4')
 	// set clicked bar as selected
-	d3.select(`[data-country=${countryId}]`).attr('fill', '#ff0000')
+	d3.select(`[data-country=${countryId}]`).attr('fill', theme().selection)
 }
 
-function generateDetailsBarChart(dataContainer) {
+function createFactorDetails(dataContainer) {
 	const { data, selectedFactor, selectedCountry } = dataContainer
 	const factor = selectedFactor.value
 	const filteredData = filterBarDataForCategory(data, factor)
-	renderGraph(filteredData, selectedCountry)
+	renderGraph(filteredData, selectedCountry, selectedFactor)
 
 	//subscribe to  observables
 	selectedFactor.subscribe(() => updateGraph(dataContainer))
 	selectedCountry.subscribe(() => updateCountry(selectedCountry.value))
 }
 
-export { generateDetailsBarChart }
+export { createFactorDetails }
