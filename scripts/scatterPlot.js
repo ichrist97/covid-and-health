@@ -41,6 +41,10 @@ function createScatterPlot(dataContainer) {
 		.attr('transform', 'translate(' + margin + ',' + (height + margin) + ')')
 		.call(d3.axisBottom(x).ticks(15, '.0f'))
 
+	xAxis.selectAll('line').style('stroke', Theme().axis)
+	xAxis.selectAll('path').style('stroke', Theme().axis)
+	xAxis.selectAll('text').style('fill', Theme().axis)
+
 	//Basically the same for the y axis
 	const y = d3.scaleLog().domain([1, maxDeaths]).range([height, 0]).clamp(true).nice()
 
@@ -48,6 +52,10 @@ function createScatterPlot(dataContainer) {
 		.append('g')
 		.attr('transform', 'translate(' + margin + ',' + margin + ')')
 		.call(d3.axisLeft(y).ticks(15, '.0f'))
+
+	yAxis.selectAll('line').style('stroke', Theme().axis)
+	yAxis.selectAll('path').style('stroke', Theme().axis)
+	yAxis.selectAll('text').style('fill', Theme().axis)
 
 	//And a scale axis for convenience
 	const r = d3.scaleLinear().domain([0, 1]).range([minScale, maxScale])
@@ -142,14 +150,6 @@ function createScatterPlot(dataContainer) {
 			.append('circle')
 			.attr('cx', d => x(d.cases))
 			.attr('cy', d => y(d.deaths))
-			.on('mouseenter', (e, d) => {
-				showTooltip(e, d)
-				d3.select(e.currentTarget).style('fill', Theme().hover)
-			})
-			.on('mouseleave', (e, d) => {
-				clearTooltip(e, d)
-				d3.select(e.currentTarget).style('fill', dotFill(d.factor, bounds, d.country))
-			})
 			.style('fill', d => dotFill(d.factor, bounds, d.country))
 
 		enter
@@ -163,14 +163,14 @@ function createScatterPlot(dataContainer) {
 			.merge(enter)
 			.sort(compareCountries)
 			.on('click', (e, d) => selectedCountry.update(d.country))
-
-		xAxis.selectAll('line').style('stroke', Theme().axis)
-		xAxis.selectAll('path').style('stroke', Theme().axis)
-		xAxis.selectAll('text').style('fill', Theme().axis)
-
-		yAxis.selectAll('line').style('stroke', Theme().axis)
-		yAxis.selectAll('path').style('stroke', Theme().axis)
-		yAxis.selectAll('text').style('fill', Theme().axis)
+			.on('mouseenter', (e, d) => {
+				showTooltip(e, d)
+				d3.select(e.currentTarget).style('fill', Theme().hover)
+			})
+			.on('mouseleave', (e, d) => {
+				clearTooltip(e, d)
+				d3.select(e.currentTarget).style('fill', dotFill(d.factor, bounds, d.country))
+			})
 	}
 
 	//Updates the scatter plot

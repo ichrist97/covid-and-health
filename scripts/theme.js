@@ -31,7 +31,7 @@ function DefaultTheme() {
 	this.buttonFont = '#343434'
 
 	//The color of the graph axis
-	this.axis = '#ff0000'
+	this.axis = '#ffffff'
 	//The color of the background of each element of the dashboard
 	this.background = '#232323'
 	//The color to display font in
