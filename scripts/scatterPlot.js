@@ -1,6 +1,6 @@
 /// <reference path='d3.js' />
 
-import { Theme } from './theme.js'
+import { theme, styleAxis } from './theme.js'
 
 function createScatterPlot(dataContainer) {
 	// destructure data container
@@ -21,38 +21,76 @@ function createScatterPlot(dataContainer) {
 
 	//Grab the svg element and store some properties for convenience
 	const svg = d3.select('#scatterPlot').select('.plot')
-	const width = parseFloat(svg.style('width')) - 2 * Theme().marginLarge
-	const height = parseFloat(svg.style('height')) - 2 * Theme().marginLarge
+	const width = parseFloat(svg.style('width')) - theme().marginLarge - theme().margin
+	const height = parseFloat(svg.style('height')) - theme().marginLarge - theme().margin
 
 	//And a scale axis for convenience
-	const r = d3.scaleLinear().domain([0, 1]).range([Theme().minScatterPoint, Theme().maxScatterPoint])
+	const r = d3.scaleLinear().domain([0, 1]).range([theme().minScatterPoint, theme().maxScatterPoint])
 
 	//Preapare the container hosting the data spheres
-	const container = svg.append('g').attr('transform', 'translate(' + Theme().marginLarge + ',' + Theme().marginLarge + ')')
+	const container = svg.append('g').attr('transform', 'translate(' + theme().marginLarge + ',' + theme().margin + ')')
 
 	//Help ourselves to some x axis
 	const x = d3.scaleLog().domain([1, maxCases]).range([0, width]).clamp(true).nice()
 
 	const xAxis = svg
 		.append('g')
-		.attr('transform', 'translate(' + Theme().marginLarge + ',' + (height + Theme().marginLarge + Theme().maxScatterPoint) + ')')
-		.call(d3.axisBottom(x).ticks(15, '.0f'))
+		.attr('transform', 'translate(' + theme().marginLarge + ',' + (height + theme().margin + theme().maxScatterPoint) + ')')
+		.call(d3.axisBottom(x).ticks(12, '.0f'))
 
-	xAxis.selectAll('line').style('stroke', Theme().axis)
-	xAxis.selectAll('path').style('stroke', Theme().axis)
-	xAxis.selectAll('text').style('fill', Theme().axis)
+	styleAxis(xAxis)
 
 	//Basically the same for the y axis
 	const y = d3.scaleLog().domain([1, maxDeaths]).range([height, 0]).clamp(true).nice()
 
 	const yAxis = svg
 		.append('g')
-		.attr('transform', 'translate(' + (Theme().marginLarge - Theme().maxScatterPoint) + ',' + Theme().marginLarge + ')')
-		.call(d3.axisLeft(y).ticks(15, '.0f'))
+		.attr('transform', 'translate(' + (theme().marginLarge - theme().maxScatterPoint) + ',' + theme().margin + ')')
+		.call(d3.axisLeft(y).ticks(12, '.0f'))
 
-	yAxis.selectAll('line').style('stroke', Theme().axis)
-	yAxis.selectAll('path').style('stroke', Theme().axis)
-	yAxis.selectAll('text').style('fill', Theme().axis)
+	styleAxis(yAxis)
+
+	//Builds the axis lables for the scatter plot
+	function buildAxisLabels() {
+		//Remove old labels
+		svg.selectAll('.axisLabel').remove()
+
+		//Build the x axis label
+		const xLabel = svg
+			.append('g')
+			.classed('axisLabel', true)
+			//.attr('transform', 'translate(' + (theme().marginLarge + width / 2) + ',' + (height + 2 * theme().marginLarge - 12) + ')')
+			.attr(
+				'transform',
+				'translate(' + (theme().marginLarge + width) + ',' + (height + theme().margin + theme().maxScatterPoint - 15) + ')'
+			)
+			.append('text')
+			.attr('fill', theme().font)
+			.attr('dominant-baseline', 'hanging')
+			.attr('text-anchor', 'end')
+			.attr('fill', theme().axis)
+			.style('font-size', theme().fontSizeAxis)
+			.text('covid-19 infections per 100.000 capita')
+
+		//Build the y axis label
+		const yLabel = svg
+			.append('g')
+			.classed('axisLabel', true)
+			.attr('transform', 'translate(' + (theme().marginLarge - theme().maxScatterPoint + 10) + ',' + theme().margin + ')')
+			.append('text')
+			.attr('fill', theme().font)
+			.attr('dominant-baseline', 'hanging')
+			.attr('text-anchor', 'start')
+			.attr('fill', theme().axis)
+			.style('font-size', theme().fontSizeAxis)
+
+		yLabel.append('tspan').text('covid-19 deaths')
+		yLabel
+			.append('tspan')
+			.attr('x', 0)
+			.attr('dy', theme().fontSizeAxis + 3)
+			.text('per 100.000 capita')
+	}
 
 	//Builds the legend for the scatter plot
 	function buildLegend(bounds) {
@@ -62,11 +100,11 @@ function createScatterPlot(dataContainer) {
 		//Let's put everythin in a group for easy placement
 		const legend = svg
 			.append('g')
-			.attr('transform', 'translate(' + (width + 2 * Theme().marginLarge - Theme().margin) + ',' + Theme().margin + ')')
+			.attr('transform', 'translate(' + (width + theme().marginLarge) + ',' + theme().margin + ')')
 			.classed('legend', true)
 
-		const count = Theme().scatterLegendCount
-		const size = Theme().scatterLegendSize
+		const count = theme().scatterLegendCount
+		const size = theme().scatterLegendSize
 
 		//Now add elements for each legend entrie
 		const elems = legend
@@ -82,7 +120,7 @@ function createScatterPlot(dataContainer) {
 			.attr('y', -size / 2)
 			.attr('width', size)
 			.attr('height', size)
-			.attr('fill', d => Theme().primaryBlend(d / (count - 1)))
+			.attr('fill', d => theme().primaryBlend(d / (count - 1)))
 
 		elems
 			.append('text')
@@ -90,8 +128,8 @@ function createScatterPlot(dataContainer) {
 			.attr('text-anchor', 'end')
 			.attr('x', -size)
 			.attr('dy', 1)
-			.attr('fill', Theme().font)
-			.style('font-size', Theme().fontSizeSmall)
+			.attr('fill', theme().font)
+			.style('font-size', theme().fontSizeAxis)
 			.text(d => Math.round(bounds.min + bounds.span * (d / (count - 1))))
 	}
 
@@ -131,11 +169,11 @@ function createScatterPlot(dataContainer) {
 	//Computes the fill color for a dot from it's factor value
 	function dotFill(value, bounds, country = null) {
 		if (country == selectedCountry.value) {
-			return Theme().selection
+			return theme().selection
 		}
 
 		const t = 1 - (value - bounds.min) / bounds.span
-		return Theme().primaryBlend(t)
+		return theme().primaryBlend(t)
 	}
 
 	//Compues the sort order for two countries
@@ -155,7 +193,7 @@ function createScatterPlot(dataContainer) {
 			.attr('y', y(d.deaths))
 			.attr('text-anchor', 'middle')
 			.attr('dominant-baseline', 'central')
-			.attr('fill', Theme().font)
+			.attr('fill', theme().font)
 	}
 
 	//Removes all tooltips
@@ -167,11 +205,11 @@ function createScatterPlot(dataContainer) {
 	function showScatterPlot(data, bounds) {
 		const update = container.selectAll('circle').data(data, x => x.country)
 
-		update.filter(d => d.country == selectedCountry.value).style('fill', Theme().selection)
+		update.filter(d => d.country == selectedCountry.value).style('fill', theme().selection)
 
 		update
 			.transition(d3.easeBackInOut)
-			.duration(Theme().transitionDuration)
+			.duration(theme().transitionDuration)
 			.attr('r', d => r((d.factor - bounds.min) / bounds.span))
 			.attr('cx', d => x(d.cases))
 			.attr('cy', d => y(d.deaths))
@@ -186,10 +224,10 @@ function createScatterPlot(dataContainer) {
 
 		enter
 			.transition()
-			.duration(Theme().transitionDuration)
+			.duration(theme().transitionDuration)
 			.attrTween('r', d => d3.interpolate(0, r((d.factor - bounds.min) / bounds.span)))
 
-		update.exit().transition(d3.easeBackIn).duration(Theme().transitionDuration).attr('r', 0).remove()
+		update.exit().transition(d3.easeBackIn).duration(theme().transitionDuration).attr('r', 0).remove()
 
 		update
 			.merge(enter)
@@ -197,7 +235,7 @@ function createScatterPlot(dataContainer) {
 			.on('click', (e, d) => selectedCountry.update(d.country))
 			.on('mouseenter', (e, d) => {
 				showTooltip(e, d)
-				d3.select(e.currentTarget).style('fill', Theme().hover)
+				d3.select(e.currentTarget).style('fill', theme().hover)
 			})
 			.on('mouseleave', (e, d) => {
 				clearTooltip(e, d)
@@ -209,8 +247,10 @@ function createScatterPlot(dataContainer) {
 	function updateScatterPlot() {
 		const data = scatterPlotData()
 		const bounds = factorMinMax(data)
+
 		showScatterPlot(data, bounds)
 		buildLegend(bounds)
+		buildAxisLabels()
 	}
 
 	//Subscribe the update to global events

@@ -47,7 +47,8 @@ function DefaultTheme() {
 	this.marginLarge = 70
 
 	//Different font sizes
-	this.fontSizeSmall = 14
+	this.fontSizeAxis = 12
+	this.fontSizeSmall = 12
 
 	//The min and max scales for scatter plot points
 	this.minScatterPoint = 6
@@ -65,16 +66,23 @@ function DefaultTheme() {
 const DEFAULT_THEME = new DefaultTheme()
 
 //This is the currently active theme
-let theme = DEFAULT_THEME
+let currentTheme = DEFAULT_THEME
 
 //The function to access the current theme
-function Theme() {
-	return theme
+function theme() {
+	return currentTheme
 }
 
 //The function to changes the current theme
-function ChangeTheme(newTheme) {
+function changeTheme(newTheme) {
 	theme = newTheme
 }
 
-export { Theme, ChangeTheme, DEFAULT_THEME }
+//Utility function for applying the current theme to an axis
+function styleAxis(axis) {
+	axis.selectAll('line').attr('stroke', currentTheme.axis)
+	axis.selectAll('path').attr('stroke', currentTheme.axis)
+	axis.selectAll('text').attr('fill', currentTheme.axis).style('font-size', currentTheme.fontSizeAxis)
+}
+
+export { theme, changeTheme, styleAxis, DEFAULT_THEME }
