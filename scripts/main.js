@@ -5,12 +5,15 @@ import { createTimeline } from './timeline.js'
 import { setupFactors } from './factorSelection.js'
 
 async function buildVisualization() {
-  const dataContainer = await loadData()
+	const dataContainer = await loadData()
 
-  setupFactors(dataContainer)
-  generateDetailsBarChart(dataContainer)
-  createScatterPlot(dataContainer)
-  createTimeline(dataContainer)
+	setupFactors(dataContainer)
+	generateDetailsBarChart(dataContainer)
+	createScatterPlot(dataContainer)
+	createTimeline(dataContainer)
+
+	// deactivate loading screen when everything is finished rendering
+	document.querySelector('#loading').style.display = 'none'
 }
 
 buildVisualization()
