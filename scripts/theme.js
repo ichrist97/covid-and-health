@@ -51,7 +51,7 @@ function DefaultTheme() {
 	this.maxScatterPoint = 36
 
 	//Custom settings for the timeline
-	this.timelineIndicator = 10
+	this.timelineIndicator = 8
 }
 
 //Define the default theme

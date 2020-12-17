@@ -41,7 +41,7 @@ function createTimeline(dataContainer) {
 			d3
 				.axisTop(x)
 				.tickSize(7)
-				.ticks(endWeek - startWeek)
+				.ticks(weekDelta / 2)
 		)
 
 	axis.selectAll('line').style('stroke', Theme().axis)
@@ -68,7 +68,7 @@ function createTimeline(dataContainer) {
 	//Create an indicator for the currently selected week with a fake shadow
 	const idc = svg.append('g')
 	idc.append('circle').attr('r', Theme().timelineIndicator).attr('fill', '#00000055').attr('cy', 2)
-	idc.append('circle').attr('r', Theme().timelineIndicator).attr('fill', Theme().buttonActive)
+	idc.append('circle').attr('r', Theme().timelineIndicator).attr('fill', Theme().axis)
 
 	//Tracks whether the indicator was clicked
 	var isIdcDragged = false
