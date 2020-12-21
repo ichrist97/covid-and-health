@@ -39,7 +39,6 @@ function setInfections(data, selectedCountry, selectedWeek) {
 
 	const element = document.querySelector('#cumulated-cases')
 	const text = formatNumber(infections)
-	console.log(infections)
 	element.innerText = text
 }
 
