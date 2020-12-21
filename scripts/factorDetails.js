@@ -4,6 +4,7 @@ import { factorExplanation } from './data.js'
 let svg
 let barsContainer
 let sortOrder = 'ascending' // default
+let currentData // current data subset filtered by selected factor
 
 // set the dimensions and margins of the graph
 const container = document.querySelector('#factor-details')
@@ -40,7 +41,7 @@ function filterBarDataForCategory(data, category) {
 	return sortedData
 }
 
-function renderGraph(data, selectedCountry, selectedFactor) {
+function renderGraph(data, selectedCountry, selectedFactor, bounds) {
 	// append the svg object to the body of the page
 	// append a 'group' element to 'svg'
 	// moves the 'group' element to the top left margin
@@ -52,10 +53,10 @@ function renderGraph(data, selectedCountry, selectedFactor) {
 
 	barsContainer = svg.append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
 
-	renderBars(data, selectedCountry, selectedFactor)
+	renderBars(data, selectedCountry, selectedFactor, bounds)
 }
 
-function renderBars(data, selectedCountry, selectedFactor) {
+function renderBars(data, selectedCountry, selectedFactor, bounds) {
 	// set the ranges
 	let yScale = d3.scaleBand().range([height, 0]).padding(0.1)
 	let xScale = d3.scaleLinear().range([0, width])
@@ -95,7 +96,7 @@ function renderBars(data, selectedCountry, selectedFactor) {
 		.attr('data-country', d => d.id)
 		// highlight selected country
 		.attr('fill', d => {
-			return d.id === selectedCountry.value ? theme().selection : '#5a9af4'
+			return calcFillColor(d.value, bounds)
 		})
 		// user hovers over bar
 		.on('mouseenter', event => {
@@ -113,14 +114,14 @@ function renderBars(data, selectedCountry, selectedFactor) {
 				.attr('fill', d => {
 					// only change when bar is not selected
 					const country = event.target.getAttribute('data-country')
-					return country !== selectedCountry.value ? '#5a9af4' : theme().selection
+					return country !== selectedCountry.value ? calcFillColor(d.value, bounds) : theme().selection
 				})
 				.style('cursor', 'default')
 		})
 		// user clicks bar
 		.on('click', event => {
 			// deselect all bars
-			d3.selectAll('rect').attr('fill', '#5a9af4')
+			d3.selectAll('rect').attr('fill', d => calcFillColor(d.value, bounds))
 			// set clicked bar as selected
 			d3.select(event.target).attr('fill', theme().selection)
 			// update observable
@@ -158,16 +159,38 @@ function renderBars(data, selectedCountry, selectedFactor) {
 		.attr('width', d => xScale(d.value))
 }
 
+/**
+ * Calculate fill color on color scale dependent on min and max values of all data
+ * @param {*} value
+ * @param {*} bounds
+ */
+function calcFillColor(value, bounds) {
+	const t = 1 - (value - bounds.min) / bounds.span
+	return theme().primaryBlend(t)
+}
+
+/**
+ * Get min, max value and span between for the data of a single factor
+ * @param {*} data
+ */
+function getBoundsOfFactor(data) {
+	const min = Math.min(...data.map(x => x.value))
+	const max = Math.max(...data.map(x => x.value))
+	return { min: min, max: max, span: max - min }
+}
+
 function updateGraph(dataContainer) {
 	const { data, selectedFactor, selectedCountry } = dataContainer
 	const factor = selectedFactor.value
-	const filteredData = filterBarDataForCategory(data, factor)
-	renderBars(filteredData, selectedCountry, selectedFactor)
+	currentData = filterBarDataForCategory(data, factor)
+	const bounds = getBoundsOfFactor(currentData)
+	renderBars(currentData, selectedCountry, selectedFactor, bounds)
 }
 
 function updateCountry(countryId) {
 	// deselect all bars
-	d3.selectAll('rect').attr('fill', '#5a9af4')
+	const bounds = getBoundsOfFactor(currentData)
+	d3.selectAll('rect').attr('fill', d => calcFillColor(d.value, bounds))
 	// set clicked bar as selected
 	d3.select(`[data-country=${countryId}]`).attr('fill', theme().selection)
 }
@@ -175,8 +198,9 @@ function updateCountry(countryId) {
 function createFactorDetails(dataContainer) {
 	const { data, selectedFactor, selectedCountry } = dataContainer
 	const factor = selectedFactor.value
-	const filteredData = filterBarDataForCategory(data, factor)
-	renderGraph(filteredData, selectedCountry, selectedFactor)
+	currentData = filterBarDataForCategory(data, factor)
+	const bounds = getBoundsOfFactor(currentData)
+	renderGraph(currentData, selectedCountry, selectedFactor, bounds)
 
 	//subscribe to  observables
 	selectedFactor.subscribe(() => updateGraph(dataContainer))

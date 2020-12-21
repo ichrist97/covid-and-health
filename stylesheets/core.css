@@ -12,15 +12,12 @@ html {
 	font-family: Roboto;
 	color: azure;
 	background-color: #161616;
-	overflow: hidden;
 }
 
 body {
-	margin: 0;
-	width: min(100vw, 100vmin * 1.2);
+	margin: auto;
 	height: 100vh;
-
-	margin-left: max(0px, (100vw - 100vmin * 1.2) / 2);
+	max-width: 120em; /* cap width at 1080p */
 
 	overflow: hidden;
 }

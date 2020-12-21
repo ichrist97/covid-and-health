@@ -1,11 +1,11 @@
-import { FACTORS } from './data.js'
+import { FACTORS, formatFactor } from './data.js'
 
 function setupFactors(dataContainer) {
 	const { selectedFactor } = dataContainer
 	const factors = Object.values(FACTORS)
-	const container = document.querySelector('#factor-container')
+	const container = document.querySelector('#factor-selection')
 	factors.forEach(factor => {
-		const translation = translateFactor(factor)
+		const translation = formatFactor(factor)
 		// create options in dom
 		if (translation) {
 			const item = document.createElement('div')
@@ -47,31 +47,6 @@ function getFactorRoot(element) {
 	} else {
 		return getFactorRoot(element.parentNode)
 	}
-}
-
-function translateFactor(factor) {
-	let translation
-	switch (factor) {
-		case 'smoking':
-			translation = 'Raucher'
-			break
-		case 'obesity':
-			translation = 'Übergewicht'
-			break
-		case 'alcohol':
-			translation = 'Alkoholkonsum'
-			break
-		case 'hospitalBeds':
-			translation = 'Anzahl Krankenbetten'
-			break
-		case 'healthSpendings':
-			translation = 'Ausgaben Gesundheitswesen'
-			break
-		default:
-			translation = ''
-			break
-	}
-	return translation
 }
 
 export { setupFactors }
