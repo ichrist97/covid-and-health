@@ -93,4 +93,29 @@ async function loadData() {
 	}
 }
 
-export { loadData, FACTORS, OVERVIEWS, FILTERS, factorExplanation, factorDetailExplanation }
+function formatFactor(factor) {
+	let format
+	switch (factor) {
+		case 'smoking':
+			format = 'Smoking'
+			break
+		case 'obesity':
+			format = 'Obesity'
+			break
+		case 'alcohol':
+			format = 'Alcohol'
+			break
+		case 'hospitalBeds':
+			format = 'Hospital beds'
+			break
+		case 'healthSpendings':
+			format = 'Health spendings'
+			break
+		default:
+			format = ''
+			break
+	}
+	return format
+}
+
+export { loadData, FACTORS, OVERVIEWS, FILTERS, factorExplanation, factorDetailExplanation, formatFactor }

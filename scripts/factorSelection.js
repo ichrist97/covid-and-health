@@ -1,4 +1,4 @@
-import { FACTORS } from './data.js'
+import { FACTORS, formatFactor } from './data.js'
 
 function setupFactors(dataContainer) {
 	const { selectedFactor } = dataContainer
@@ -47,31 +47,6 @@ function getFactorRoot(element) {
 	} else {
 		return getFactorRoot(element.parentNode)
 	}
-}
-
-function formatFactor(factor) {
-	let format
-	switch (factor) {
-		case 'smoking':
-			format = 'Smoking'
-			break
-		case 'obesity':
-			format = 'Obesity'
-			break
-		case 'alcohol':
-			format = 'Alcohol'
-			break
-		case 'hospitalBeds':
-			format = 'Hospital beds'
-			break
-		case 'healthSpendings':
-			format = 'Health spendings'
-			break
-		default:
-			format = ''
-			break
-	}
-	return format
 }
 
 export { setupFactors }
