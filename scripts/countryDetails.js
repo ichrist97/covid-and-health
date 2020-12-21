@@ -33,12 +33,13 @@ function setInfections(data, selectedCountry, selectedWeek) {
 	// sum up infections until selectedWeek
 	for (let i = 0; i <= selectedWeek; i++) {
 		// calculate back from population scaler
-		let casesWeek = weeks[i].cases * scaler
+		let casesWeek = Math.round(weeks[i].cases * scaler)
 		infections += casesWeek
 	}
 
 	const element = document.querySelector('#cumulated-cases')
 	const text = formatNumber(infections)
+	console.log(infections)
 	element.innerText = text
 }
 
