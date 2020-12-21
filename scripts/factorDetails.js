@@ -4,6 +4,7 @@ import { factorExplanation } from './data.js'
 let svg
 let barsContainer
 let sortOrder = 'ascending' // default
+let currentData // current data subset filtered by selected factor
 
 // set the dimensions and margins of the graph
 const container = document.querySelector('#factor-details')
@@ -181,13 +182,14 @@ function getBoundsOfFactor(data) {
 function updateGraph(dataContainer) {
 	const { data, selectedFactor, selectedCountry } = dataContainer
 	const factor = selectedFactor.value
-	const filteredData = filterBarDataForCategory(data, factor)
-	const bounds = getBoundsOfFactor(filteredData)
-	renderBars(filteredData, selectedCountry, selectedFactor, bounds)
+	currentData = filterBarDataForCategory(data, factor)
+	const bounds = getBoundsOfFactor(currentData)
+	renderBars(currentData, selectedCountry, selectedFactor, bounds)
 }
 
-function updateCountry(countryId, bounds) {
+function updateCountry(countryId) {
 	// deselect all bars
+	const bounds = getBoundsOfFactor(currentData)
 	d3.selectAll('rect').attr('fill', d => calcFillColor(d.value, bounds))
 	// set clicked bar as selected
 	d3.select(`[data-country=${countryId}]`).attr('fill', theme().selection)
@@ -196,13 +198,13 @@ function updateCountry(countryId, bounds) {
 function createFactorDetails(dataContainer) {
 	const { data, selectedFactor, selectedCountry } = dataContainer
 	const factor = selectedFactor.value
-	const filteredData = filterBarDataForCategory(data, factor)
-	const bounds = getBoundsOfFactor(filteredData)
-	renderGraph(filteredData, selectedCountry, selectedFactor, bounds)
+	currentData = filterBarDataForCategory(data, factor)
+	const bounds = getBoundsOfFactor(currentData)
+	renderGraph(currentData, selectedCountry, selectedFactor, bounds)
 
 	//subscribe to  observables
 	selectedFactor.subscribe(() => updateGraph(dataContainer))
-	selectedCountry.subscribe(() => updateCountry(selectedCountry.value, bounds))
+	selectedCountry.subscribe(() => updateCountry(selectedCountry.value))
 }
 
 export { createFactorDetails }
