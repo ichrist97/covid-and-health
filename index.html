@@ -31,9 +31,9 @@
 			<div id="factor-selection" class="gridElement"></div>
 			<div id="country-details" class="gridElement">
 				<h2 id="selected-country-title"></h2>
-				<h3 id="selected-country-cases">Cumulated infections: <span id="cumulated-cases" class="country-detail">100</span></h3>
-				<h3 id="selected-country-deaths">Cumulated deaths: <span id="cumulated-deaths" class="country-detail">100</span></h3>
-				<h3 id="selected-country-factor">Health factor: <span id="selected-health-factor" class="country-detail">Smoking</span></h3>
+				<h3 id="selected-country-cases">Cumulated infections: <span id="cumulated-cases" class="country-detail"></span></h3>
+				<h3 id="selected-country-deaths">Cumulated deaths: <span id="cumulated-deaths" class="country-detail"></span></h3>
+				<h3 id="selected-country-factor">Health factor: <span id="selected-health-factor" class="country-detail"></span></h3>
 			</div>
 			<div id="factor-details" class="gridElement"></div>
 		</div>
@@ -48,6 +48,37 @@
 				</div>
 				<div class="configure-border-2">
 					<div class="configure-core"></div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Trigger help modal -->
+		<div id="trigger-container">
+			<div id="triggerHelp"><span>Help</span></div>
+		</div>
+
+		<!-- Help modal -->
+		<div id="helpModal" class="modal">
+			<!-- Modal content -->
+			<div class="modal-content">
+				<div class="modal-header">
+					<span class="close">&times;</span>
+
+					<div class="modal-nav">
+						<a class="tab" data-tab="information-tab-content">Information</a>
+						<a class="tab" data-tab="factors-tab-content">Health factors</a>
+					</div>
+				</div>
+				<div class="modal-body">
+					<!-- Information tab -->
+					<div id="information-tab-content" class="tab-content">
+						<h1 style="color: black">INFORMATION</h1>
+					</div>
+
+					<!-- Factors tab -->
+					<div id="factors-tab-content" class="tab-content">
+						<h1 style="color: black">FACTORS</h1>
+					</div>
 				</div>
 			</div>
 		</div>

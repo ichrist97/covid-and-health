@@ -4,6 +4,7 @@ import { createScatterPlot } from './scatterPlot.js'
 import { createTimeline } from './timeline.js'
 import { setupFactors } from './factorSelection.js'
 import { renderCountryDetails } from './countryDetails.js'
+import { initModal } from './help.js'
 
 async function buildVisualization() {
 	const dataContainer = await loadData()
@@ -18,4 +19,5 @@ async function buildVisualization() {
 	document.querySelector('#loading').style.display = 'none'
 }
 
+initModal()
 buildVisualization()

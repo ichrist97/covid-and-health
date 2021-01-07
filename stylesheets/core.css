@@ -170,3 +170,150 @@ Global styling for the grid and grid elements
 		transform: rotate(-315deg);
 	}
 }
+
+/* trigger modal button */
+#trigger-container {
+	overflow: hidden;
+	position: fixed;
+	top: -3em;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+
+	/* center content */
+	display: flex;
+	justify-content: center;
+}
+
+#triggerHelp {
+	color: white;
+	background-color: #00355d;
+	z-index: 1;
+	border: none;
+	border-radius: 20px;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+	height: 6em;
+	display: flex;
+}
+
+#triggerHelp span {
+	align-self: flex-end;
+	padding: 1em;
+}
+
+#triggerHelp:hover {
+	background-color: #fdae6b;
+	cursor: pointer;
+}
+
+/* Help modal */
+/* The Modal (background) */
+.modal {
+	display: none; /* Hidden by default */
+	position: fixed; /* Stay in place */
+	z-index: 1; /* Sit on top */
+	left: 0;
+	top: 0;
+	padding-top: 6em;
+	width: 100%; /* Full width */
+	height: 100%; /* Full height */
+	overflow: auto; /* Enable scroll if needed */
+	background-color: rgb(0, 0, 0); /* Fallback color */
+	background-color: rgba(0, 0, 0, 0.8); /* Black w/ opacity */
+}
+
+/* The Close Button */
+.close {
+	float: right;
+	font-size: 42px;
+	font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+	color: #fdae6b;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+/* Modal Header */
+.modal-header {
+	padding: 2px 16px;
+	background-color: #00355d;
+	color: white;
+}
+
+/* Modal Body */
+.modal-body {
+	padding: 2em;
+}
+
+/* Modal Footer */
+.modal-footer {
+	background-color: #00355d;
+	color: white;
+
+	display: flex;
+	justify-content: center;
+}
+
+/* Modal Content */
+.modal-content {
+	position: relative;
+	background-color: #fefefe;
+	margin: auto;
+	padding: 0;
+	width: 80%;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	animation-name: animatetop;
+	animation-duration: 0.4s;
+}
+
+/* Add Animation */
+@keyframes animatetop {
+	from {
+		top: -300px;
+		opacity: 0;
+	}
+	to {
+		top: 0;
+		opacity: 1;
+	}
+}
+
+/* modal nav */
+.modal-nav {
+	overflow: hidden;
+}
+
+.modal-nav .tab {
+	float: left;
+	color: #f2f2f2;
+	text-align: center;
+	padding: 1em 1em;
+	text-decoration: none;
+}
+
+/* Change the color of links on hover */
+.modal-nav .tab:hover {
+	background-color: #fdae6b;
+	color: black;
+	cursor: pointer;
+}
+
+/* Add a color to the active/current link */
+.modal-nav .tab.active {
+	background-color: #e6550d;
+	color: white;
+}
+
+/* hide by default */
+.tab-content {
+	display: none;
+}
+
+/* show content of selected tab */
+.tab-content.active {
+	display: block;
+}
