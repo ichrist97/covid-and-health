@@ -1,3 +1,17 @@
 #factor-details {
 	grid-area: 5 / 2 / 11 / 3;
 }
+
+.bar-label {
+	cursor: default;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	pointer-events: none;
+}
+
+.bar-label {
+	-webkit-text-stroke: 1px white;
+	-webkit-text-fill-color: white;
+}

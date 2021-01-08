@@ -1,8 +1,9 @@
+/// <reference path='d3.js' />
+
 import { theme } from './theme.js'
 import { factorExplanation } from './data.js'
 
 let svg
-let barsContainer
 let sortOrder = 'ascending' // default
 let currentData // current data subset filtered by selected factor
 
@@ -10,7 +11,7 @@ let currentData // current data subset filtered by selected factor
 const container = document.querySelector('#factor-details')
 const offsetWidth = container.offsetWidth
 const offsetHeight = container.offsetHeight
-const margin = { top: 40, right: 40, bottom: 60, left: 100 },
+const margin = { top: 20, right: 20, bottom: 40, left: 20 },
 	width = offsetWidth - margin.left - margin.right,
 	height = offsetHeight - margin.top - margin.bottom
 
@@ -51,7 +52,7 @@ function renderGraph(data, selectedCountry, selectedFactor, bounds) {
 		.attr('width', width + margin.left + margin.right)
 		.attr('height', height + margin.top + margin.bottom)
 
-	barsContainer = svg.append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+	svg = svg.append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
 
 	renderBars(data, selectedCountry, selectedFactor, bounds)
 }
@@ -79,19 +80,40 @@ function renderBars(data, selectedCountry, selectedFactor, bounds) {
 		})
 	)
 
-	// append the rectangles for the bar chart
-	barsContainer
-		.selectAll('rect')
-		.data(data)
-		.join('rect')
-		// no bars before animation
-		.attr('width', d => {
-			return xScale(0)
+	// WORKAROUND for bug of staying bars at update of data
+	svg.selectAll('.bar-group').remove()
+
+	// indices for data
+	let index = 0
+
+	// Create bar groups
+	const bars = svg
+		.selectAll('.bar-group')
+		.data(data, d => {
+			d.index = index
+			index++
+			return d
 		})
-		.attr('y', d => {
+		.join('g')
+		.attr('class', 'bar-group')
+
+	// append rect to group
+	bars
+		.append('rect')
+		.attr('class', 'bar')
+		.attr('x', function (d) {
+			return 0
+		})
+		.attr('y', function (d) {
 			return yScale(d.country)
 		})
-		.attr('height', yScale.bandwidth())
+		// no bars before animation
+		.attr('width', function (d) {
+			return xScale(0)
+		})
+		.attr('height', d => {
+			return yScale.bandwidth()
+		})
 		// set country on bar for selecting
 		.attr('data-country', d => d.id)
 		// highlight selected country
@@ -114,7 +136,9 @@ function renderBars(data, selectedCountry, selectedFactor, bounds) {
 				.attr('fill', d => {
 					// only change when bar is not selected
 					const country = event.target.getAttribute('data-country')
-					return country !== selectedCountry.value ? calcFillColor(d.value, bounds) : theme().selection
+					return country !== selectedCountry.value
+						? calcFillColor(d.value, bounds)
+						: theme().selection
 				})
 				.style('cursor', 'default')
 		})
@@ -129,10 +153,68 @@ function renderBars(data, selectedCountry, selectedFactor, bounds) {
 			selectedCountry.update(country)
 		})
 
+	// bar animations
+	const t = bars.transition().duration(theme().transitionDuration).ease(d3.easePolyOut)
+	bars
+		.selectAll('rect')
+		.transition(t)
+		.attr('width', d => xScale(d.value))
+
+	// append labels to group
+	bars
+		.append('text')
+		.text(d => {
+			return d.country
+		})
+		.attr('class', 'bar-label')
+		// start at 0 for transition
+		.attr('x', 0)
+		.attr('y', d => {
+			return yScale(d.country) + yScale.bandwidth() * 0.5
+		})
+		.attr('font-family', 'sans-serif')
+		.attr('font-size', '80%')
+		.attr('fill', d => {
+			const readable = determineTextReadability(d.value, bounds)
+			return readable ? 'white' : 'black'
+		})
+		// stroke is text background for readability
+		.attr('stroke', d => {
+			const readable = determineTextReadability(d.value, bounds)
+			return readable ? 'black' : 'white'
+		})
+		.attr('stroke-width', '1px')
+		.attr('stroke-opacity', 0.2)
+		.attr('text-anchor', d => {
+			const readable = determineTextReadability(d.value, bounds)
+			return readable ? 'end' : 'start'
+		})
+		// only show every second label at larger numbers for readability
+		.attr('display', d => {
+			if (index > 20 && d.index % 2 !== 0) {
+				return 'none'
+			}
+			return 'block'
+		})
+		.attr('dominant-baseline', 'central')
+
+	// label transition with bars
+	bars
+		.selectAll('.bar-label')
+		.transition(t)
+		.attr('x', d => {
+			const readable = determineTextReadability(d.value, bounds)
+			const margin = 4
+			return readable ? xScale(d.value) - margin : xScale(d.value) + margin
+		})
+
 	// add the xAxis
-	barsContainer.selectAll('g').remove()
-	const xAxisGenerator = d3.axisBottom(xScale).ticks(3)
-	barsContainer.append('g').attr('transform', `translate(0,${height})`).call(xAxisGenerator)
+	svg.selectAll('.xAxis').remove() // remove old axis
+	svg
+		.append('g')
+		.attr('class', 'xAxis')
+		.attr('transform', `translate(0,${height})`)
+		.call(d3.axisBottom(xScale))
 
 	// xAxis label
 	const label = factorExplanation[selectedFactor.value]
@@ -142,21 +224,11 @@ function renderBars(data, selectedCountry, selectedFactor, bounds) {
 	svg
 		.append('text')
 		.attr('is-label', true)
-		.attr('transform', `translate(${width * 1.6},${height + margin.top + 40})`)
+		.attr('transform', 'translate(' + width / 2 + ' ,' + (height + margin.top + 10) + ')')
 		.style('text-anchor', 'middle')
-		.style('fill', 'white')
-		.style('font-size', theme().fontSizeAxis)
+		.style('font-size', '12px')
+		.style('fill', 'black')
 		.text(label)
-
-	// add the yAxis
-	barsContainer.append('g').call(d3.axisLeft(yScale))
-
-	// animation
-	const t = barsContainer.transition().duration(theme().transitionDuration).ease(d3.easePolyOut)
-	barsContainer
-		.selectAll('rect')
-		.transition(t)
-		.attr('width', d => xScale(d.value))
 }
 
 /**
@@ -167,6 +239,27 @@ function renderBars(data, selectedCountry, selectedFactor, bounds) {
 function calcFillColor(value, bounds) {
 	const t = 1 - (value - bounds.min) / bounds.span
 	return theme().primaryBlend(t)
+}
+
+/**
+ * Determines whether the current bar label is readible with the calculated background color from
+ * calcFillColor function. Readable text (dark background color) can stay inside of the bar but not
+ * readble texts (light background color) should be display outside of the bar.
+ * The current threshold is just a heuristic
+ * @param {*} value
+ * @param {*} bounds
+ */
+function determineTextReadability(value, bounds) {
+	const t = 1 - (value - bounds.min) / bounds.span
+
+	/**
+	 * the smaller t is, the higher is the value and darker the color filling of its bar. Current
+	 * threshold is only of heuristical nature
+	 */
+	if (t > 0.3) {
+		return false
+	}
+	return true
 }
 
 /**

@@ -2,21 +2,33 @@ import { formatFactor } from './data.js'
 
 function renderCountryDetails(dataContainer) {
 	const { data, selectedFactor, selectedCountry, selectedWeek } = dataContainer
-	setFactor(selectedFactor.value)
+
+	setFactorValue(data, selectedCountry.value, selectedFactor.value)
+	setPopulation(data, selectedCountry.value)
 	setDeaths(data, selectedCountry.value, selectedWeek.value)
 	setCountryTitle(data, selectedCountry.value)
 	setInfections(data, selectedCountry.value, selectedWeek.value)
 
 	//subscribe to  observables
-	selectedFactor.subscribe(() => setFactor(selectedFactor.value))
-	selectedCountry.subscribe(() => updateCovidData(data, selectedCountry.value, selectedWeek.value))
+	selectedFactor.subscribe(() => setFactorValue(data, selectedCountry.value, selectedFactor.value))
+	selectedCountry.subscribe(() =>
+		updateCovidData(data, selectedCountry.value, selectedWeek.value, selectedFactor.value)
+	)
 	selectedWeek.subscribe(() => updateCovidData(data, selectedCountry.value, selectedWeek.value))
 }
 
-function updateCovidData(data, selectedCountry, selectedWeek) {
+function updateCovidData(data, selectedCountry, selectedWeek, selectedFactor) {
+	setPopulation(data, selectedCountry)
 	setInfections(data, selectedCountry, selectedWeek)
 	setDeaths(data, selectedCountry, selectedWeek)
 	setCountryTitle(data, selectedCountry)
+	setFactorValue(data, selectedCountry, selectedFactor)
+}
+
+function setPopulation(data, selectedCountry) {
+	const element = document.querySelector('#population')
+	const population = data[selectedCountry].population
+	element.innerText = formatNumber(population)
 }
 
 function setCountryTitle(data, selectedCountry) {
@@ -26,43 +38,47 @@ function setCountryTitle(data, selectedCountry) {
 }
 
 function setInfections(data, selectedCountry, selectedWeek) {
-	let infections = 0
-	const weeks = Object.values(data[selectedCountry].covid)
-	const scaler = data[selectedCountry].population / 100000
-
-	// sum up infections until selectedWeek
-	for (let i = 0; i <= selectedWeek; i++) {
-		// calculate back from population scaler
-		let casesWeek = Math.round(weeks[i].cases * scaler)
-		infections += casesWeek
-	}
-
 	const element = document.querySelector('#cumulated-cases')
-	const text = formatNumber(infections)
+	const category = 'cases'
+	const sum = sumCovidData(data, category, selectedCountry, selectedWeek)
+	const text = formatNumber(sum)
 	element.innerText = text
 }
 
 function setDeaths(data, selectedCountry, selectedWeek) {
-	let deaths = 0
-	const weeks = Object.values(data[selectedCountry].covid)
-	const scaler = data[selectedCountry].population / 100000
-
-	// sum up infections until selectedWeek
-	for (let i = 0; i <= selectedWeek; i++) {
-		// calculate back from population scaler
-		let deathsWeek = weeks[i].deaths * scaler
-		deaths += deathsWeek
-	}
-
 	const element = document.querySelector('#cumulated-deaths')
-	const text = formatNumber(deaths)
+	const category = 'deaths'
+	const sum = sumCovidData(data, category, selectedCountry, selectedWeek)
+	const text = formatNumber(sum)
 	element.innerText = text
 }
 
-function setFactor(value) {
-	const formattedValue = formatFactor(value)
+function sumCovidData(data, category, selectedCountry, selectedWeek) {
+	let sum = 0
+	const weeks = Object.values(data[selectedCountry].covid)
+	const scaler = data[selectedCountry].population / 100000
+
+	/**
+	 * sum up infections until selectedWeek or until available point if not enough data
+	 * is available until selectedWeek
+	 */
+	const limit = Math.min(...[weeks.length, selectedWeek])
+	for (let i = 0; i < limit; i++) {
+		// calculate back from population scaler
+		let week = Math.round(weeks[i][category] * scaler)
+		sum += week
+	}
+	return sum
+}
+
+function setFactorValue(data, selectedCountry, selectedFactor) {
 	const element = document.querySelector('#selected-health-factor')
-	element.innerText = formattedValue
+	const factorData = data[selectedCountry][selectedFactor]
+	if (factorData) {
+		element.innerText = factorData.value
+	} else {
+		element.innerText = 'N/A'
+	}
 }
 
 function formatNumber(number) {

@@ -1,23 +1,23 @@
-function initModal() {
-	const modal = document.getElementById('helpModal')
+function initHelpModal() {
+	const modalBackground = document.querySelector('.modal-background')
 	const btn = document.getElementById('triggerHelp')
 	// Get the <span> element that closes the modal
 	const span = document.getElementsByClassName('close')[0]
 
 	// When the user clicks on the button, open the modal
 	btn.addEventListener('click', () => {
-		modal.style.display = 'block'
+		modalBackground.style.display = 'flex'
 	})
 
 	// When the user clicks on <span> (x), close the modal
 	span.addEventListener('click', () => {
-		modal.style.display = 'none'
+		modalBackground.style.display = 'none'
 	})
 
 	// When the user clicks anywhere outside of the modal, close it
-	window.addEventListener('click', event => {
-		if (event.target == modal) {
-			modal.style.display = 'none'
+	modalBackground.addEventListener('click', event => {
+		if (event.target == modalBackground) {
+			modalBackground.style.display = 'none'
 		}
 	})
 
@@ -54,4 +54,4 @@ function selectTab(tab) {
 	document.getElementById(tab).classList.add('active')
 }
 
-export { initModal }
+export { initHelpModal }

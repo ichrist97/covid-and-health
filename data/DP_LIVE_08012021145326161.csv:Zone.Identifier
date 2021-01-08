@@ -1,0 +1,4 @@
+[ZoneTransfer]
+ZoneId=3
+ReferrerUrl=https://data.oecd.org/healthres/health-spending.htm
+HostUrl=https://stats.oecd.org/sdmx-json/data/DP_LIVE/.HEALTHEXP.TOT+COMPULSORY+VOLUNTARY.PC_GDP.A/OECD?contentType=csv&detail=code&separator=comma&csv-lang=en&startPeriod=2016

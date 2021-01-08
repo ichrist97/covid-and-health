@@ -1,4 +1,4 @@
-import { FACTORS, formatFactor } from './data.js'
+import { FACTORS, formatFactor, factorExplanation } from './data.js'
 
 function setupFactors(dataContainer) {
 	const { selectedFactor } = dataContainer
@@ -15,6 +15,13 @@ function setupFactors(dataContainer) {
 			text.innerText = translation
 			item.appendChild(text)
 			container.appendChild(item)
+
+			// set tooltips for factors
+			const tooltip = document.createElement('span')
+			const tooltipText = factorExplanation[factor]
+			tooltip.innerText = tooltipText
+			tooltip.classList.add('tooltip-text')
+			item.appendChild(tooltip)
 
 			// activate css for default selected factor
 			if (factor === selectedFactor.value) {

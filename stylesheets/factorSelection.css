@@ -5,6 +5,10 @@
 	flex-direction: row;
 	flex-wrap: wrap;
 	justify-content: center;
+	align-items: center;
+
+	/* use scrolling if necessary, but don't show a horizontal scrollbar */
+	/*overflow: auto;*/
 }
 
 .factor {
@@ -13,13 +17,15 @@
 	width: 8em;
 	max-height: 2em;
 	text-align: center;
-	padding: 0.4em;
+	padding: 0.5em;
 	margin: 0.2em;
 
 	/* align text in center */
 	display: flex;
 	justify-content: center;
 	align-items: center;
+
+	position: relative;
 }
 
 .factor p {
@@ -39,4 +45,40 @@
 
 .checked {
 	background-color: #e6550d;
+}
+
+.tooltip-text {
+	visibility: hidden;
+	width: 120px;
+	background-color: white;
+	color: black;
+	text-align: center;
+	border-radius: 6px;
+	padding: 5px 0;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+	/* Position the tooltip */
+	position: absolute;
+	z-index: 1;
+	top: -5px;
+	right: 105%;
+
+	/* delay tooltip */
+	transition: 0.4s visibility;
+}
+
+.factor:hover .tooltip-text {
+	visibility: visible;
+	transition-delay: 1s;
+}
+
+.tooltip-text::after {
+	content: ' ';
+	position: absolute;
+	top: 50%;
+	left: 100%; /* To the right of the tooltip */
+	margin-top: -5px;
+	border-width: 5px;
+	border-style: solid;
+	border-color: transparent transparent transparent white;
 }

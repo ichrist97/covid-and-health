@@ -7,11 +7,11 @@ import { ObservableData } from './observer.js'
 let FACTORS, OVERVIEWS, FILTERS
 
 const factorExplanation = {
-	smoking: 'share of population considered daily smokers',
-	obesity: 'share of population considered overweight',
+	smoking: 'share (%) of population considered daily smokers',
+	obesity: 'share (%) of population considered overweight',
 	alcohol: 'annual sales of alcohol in litre/capita',
 	hospitalBeds: 'number of beds per 1000 inhabitants',
-	healthSpendings: 'share of GDP spent for health care',
+	healthSpendings: 'share (%) of GDP spent for health care',
 }
 
 const factorDetailExplanation = {
@@ -52,7 +52,7 @@ async function loadData() {
 		HEALTHSPENDINGS: 'healthSpendings',
 	}
 
-	let selectedFactor = new ObservableData(FACTORS.OBESITY)
+	let selectedFactor = new ObservableData(FACTORS.SMOKING)
 
 	//The week of the year selected on the timeline
 	let selectedWeek = new ObservableData(45)
@@ -126,4 +126,13 @@ function formatFactor(factor) {
 	return format
 }
 
-export { loadData, FACTORS, OVERVIEWS, FILTERS, factorExplanation, factorDetailExplanation, factorUnit, formatFactor }
+export {
+	loadData,
+	FACTORS,
+	OVERVIEWS,
+	FILTERS,
+	factorExplanation,
+	factorDetailExplanation,
+	factorUnit,
+	formatFactor,
+}
