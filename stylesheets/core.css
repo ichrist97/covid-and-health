@@ -11,7 +11,7 @@
 html {
 	font-family: Roboto;
 	color: azure;
-	background-color: #161616;
+	background-color: #f2f2f2;
 }
 
 body {
@@ -45,7 +45,7 @@ Global styling for the grid and grid elements
 
 .gridElement {
 	position: relative;
-	background-color: #1b1b1b;
+	background-color: #ffffff;
 
 	width: calc(100% - 20px);
 	height: calc(100% - 20px);

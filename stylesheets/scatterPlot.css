@@ -8,4 +8,5 @@ Tooltip styling for hover over information displays
 
 .tooltip {
 	font-weight: bold;
+	pointer-events: none;
 }

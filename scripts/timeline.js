@@ -48,15 +48,15 @@ function createTimeline(dataContainer) {
 	styleAxis(axis)
 
 	//const moths = d3.scaleBand().domain(['January', 'February', 'March', 'April', 'May']).range([0, width])
-	const moths = d3
+	const months = d3
 		.scaleTime()
 		.domain([new Date(2020, 0, 1), new Date(2020, 11, 31)])
 		.range([0, width])
 
 	const monthsAxis = svg
 		.append('g')
-		.attr('transform', 'translate(' + theme().margin + ',' + height / 2 + 10 + ')')
-		.call(d3.axisBottom(moths).tickSize(0).ticks(12, '%B'))
+		.attr('transform', 'translate(' + theme().margin + ',' + height / 2 + ')')
+		.call(d3.axisBottom(months).tickSize(0).ticks(12, '%B'))
 
 	styleAxis(monthsAxis)
 
@@ -64,7 +64,19 @@ function createTimeline(dataContainer) {
 	monthsAxis
 		.selectAll('text')
 		.attr('x', width / 12 / 2)
-		.attr('y', 15)
+		.attr('y', 23)
+
+	monthsAxis.select('.domain').remove()
+
+	svg
+		.append('text')
+		.attr('x', width + theme().margin)
+		.attr('y', height / 2 + 5)
+		.attr('text-anchor', 'end')
+		.attr('dominant-baseline', 'hanging')
+		.attr('fill', theme().font)
+		.style('font-size', theme().fontSizeAxis)
+		.text('weeks of the year 2020')
 
 	//Create an indicator for the currently selected week with a fake shadow
 	const idc = svg.append('g')

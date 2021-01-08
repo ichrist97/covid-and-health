@@ -1,6 +1,7 @@
 /// <reference path='d3.js' />
 
 import { theme, styleAxis } from './theme.js'
+import { factorExplanation, factorUnit } from './data.js'
 
 function createScatterPlot(dataContainer) {
 	// destructure data container
@@ -27,9 +28,6 @@ function createScatterPlot(dataContainer) {
 	//And a scale axis for convenience
 	const r = d3.scaleLinear().domain([0, 1]).range([theme().minScatterPoint, theme().maxScatterPoint])
 
-	//Preapare the container hosting the data spheres
-	const container = svg.append('g').attr('transform', 'translate(' + theme().marginLarge + ',' + theme().margin + ')')
-
 	//Help ourselves to some x axis
 	const x = d3.scaleLog().domain([1, maxCases]).range([0, width]).clamp(true).nice()
 
@@ -49,6 +47,9 @@ function createScatterPlot(dataContainer) {
 		.call(d3.axisLeft(y).ticks(12, '.0f'))
 
 	styleAxis(yAxis)
+
+	//Preapare the container hosting the data spheres
+	const container = svg.append('g').attr('transform', 'translate(' + theme().marginLarge + ',' + theme().margin + ')')
 
 	//Builds the axis lables for the scatter plot
 	function buildAxisLabels() {
@@ -97,40 +98,62 @@ function createScatterPlot(dataContainer) {
 		//First remove the old legend
 		svg.select('.legend').remove()
 
-		//Let's put everythin in a group for easy placement
+		//Let's put everything in a group for easy placement
 		const legend = svg
 			.append('g')
 			.attr('transform', 'translate(' + (width + theme().marginLarge) + ',' + theme().margin + ')')
 			.classed('legend', true)
 
 		const count = theme().scatterLegendCount
-		const size = theme().scatterLegendSize
+		const maxSize = theme().maxScatterPoint
+		const minSize = theme().minScatterPoint
+		const size = d => maxSize + (minSize - maxSize) * (d / (count - 1))
 
-		//Now add elements for each legend entrie
+		//Now add elements for each legend entry
 		const elems = legend
 			.selectAll(null)
 			.data(d3.range(count))
 			.enter()
 			.append('g')
-			.attr('transform', d => 'translate(0,' + d * size * 3 + ')')
+			.attr('transform', d => 'translate(' + -maxSize + ',' + (maxSize * 2 - size(d)) + ')')
 
 		elems
-			.append('rect')
-			.attr('x', -size / 2)
-			.attr('y', -size / 2)
-			.attr('width', size)
-			.attr('height', size)
+			.append('circle')
+			.attr('r', size)
 			.attr('fill', d => theme().primaryBlend(d / (count - 1)))
 
 		elems
 			.append('text')
-			.attr('dominant-baseline', 'middle')
+			.attr('dominant-baseline', 'central')
 			.attr('text-anchor', 'end')
-			.attr('x', -size)
-			.attr('dy', 1)
+			.attr('dx', -maxSize - 15)
+			.attr('dy', d => -size(d) + size(count - 1))
 			.attr('fill', theme().font)
 			.style('font-size', theme().fontSizeAxis)
-			.text(d => Math.round(bounds.min + bounds.span * (d / (count - 1))))
+			.text(d => Math.round(bounds.min + bounds.span * (d / (count - 1))) + factorUnit[selectedFactor.value])
+
+		elems
+			.append('line')
+			.attr('x1', 0)
+			.attr('y1', d => -size(d) + size(count - 1))
+			.attr('x2', -maxSize - 12)
+			.attr('y2', d => -size(d) + size(count - 1))
+			.attr('stroke', theme().font)
+
+		const label = legend
+			.append('text')
+			.attr('dominant-baseline', 'hanging')
+			.attr('text-anchor', 'end')
+			.attr('dy', maxSize * 2 + 15)
+			.attr('fill', theme().font)
+			.style('font-size', theme().fontSizeAxis)
+
+		label.append('tspan').text(factorExplanation[selectedFactor.value].split(' ').slice(0, 3).join(' '))
+		label
+			.append('tspan')
+			.attr('x', 0)
+			.attr('dy', theme().fontSizeAxis + 3)
+			.text(factorExplanation[selectedFactor.value].split(' ').slice(3).join(' '))
 	}
 
 	//Cleans the data for usage in the scatter plot
@@ -185,7 +208,7 @@ function createScatterPlot(dataContainer) {
 
 	//Shows a tooltip for the given country
 	function showTooltip(e, d) {
-		container
+		const text = container
 			.append('text')
 			.classed('tooltip', true)
 			.text(d.name)
@@ -194,6 +217,20 @@ function createScatterPlot(dataContainer) {
 			.attr('text-anchor', 'middle')
 			.attr('dominant-baseline', 'central')
 			.attr('fill', theme().font)
+			.style('font-size', theme().fontSizeDefault)
+
+		const box = text.node().getBBox()
+
+		container
+			.append('rect')
+			.classed('tooltip', true)
+			.attr('fill', theme().hover)
+			.attr('x', box.x - 2)
+			.attr('y', box.y - 2)
+			.attr('width', box.width + 4)
+			.attr('height', box.height + 4)
+
+		text.raise()
 	}
 
 	//Removes all tooltips

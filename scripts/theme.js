@@ -4,13 +4,13 @@ function DefaultTheme() {
 	//Primary A is the value for higher factor values
 	this.primaryA = '#00355d'
 	//Primary B is the color for lower factor values
-	this.primaryB = '#deebf7'
+	this.primaryB = '#9bb8d4'
 	//A function for blending the primary color
 	this.primaryBlend = t => d3.interpolateRgb(this.primaryA, this.primaryB)(t)
 
 	//The color to display font in which is placed over data elements
 	//Primary Font A is the value for higher factor values
-	this.primaryFontA = '#ffffff'
+	this.primaryFontA = '#575757'
 	//Primary Font B is the value for lower factor values
 	this.primaryFontB = '#343434'
 	//The color to use for outlines around
@@ -31,11 +31,11 @@ function DefaultTheme() {
 	this.buttonFont = '#343434'
 
 	//The color of the graph axis
-	this.axis = '#ffffff'
+	this.axis = '#575757'
 	//The color of the background of each element of the dashboard
-	this.background = '#232323'
+	this.background = '#ffffff'
 	//The color to display font in
-	this.font = '#ffffff'
+	this.font = '#575757'
 
 	//Values for padding, margins etc.
 
@@ -49,6 +49,7 @@ function DefaultTheme() {
 	//Different font sizes
 	this.fontSizeAxis = 12
 	this.fontSizeSmall = 12
+	this.fontSizeDefault = 14
 
 	//The min and max scales for scatter plot points
 	this.minScatterPoint = 6
@@ -56,7 +57,6 @@ function DefaultTheme() {
 
 	//The count and size of scatterplot legend elements
 	this.scatterLegendCount = 5
-	this.scatterLegendSize = 12
 
 	//Custom settings for the timeline
 	this.timelineIndicator = 8
