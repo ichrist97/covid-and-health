@@ -145,7 +145,7 @@ function renderBars(data, selectedCountry, selectedFactor, bounds) {
 		// user clicks bar
 		.on('click', event => {
 			// deselect all bars
-			d3.selectAll('rect').attr('fill', d => calcFillColor(d.value, bounds))
+			d3.selectAll('.bar').attr('fill', d => calcFillColor(d.value, bounds))
 			// set clicked bar as selected
 			d3.select(event.target).attr('fill', theme().selection)
 			// update observable
@@ -156,7 +156,7 @@ function renderBars(data, selectedCountry, selectedFactor, bounds) {
 	// bar animations
 	const t = bars.transition().duration(theme().transitionDuration).ease(d3.easePolyOut)
 	bars
-		.selectAll('rect')
+		.selectAll('.bar')
 		.transition(t)
 		.attr('width', d => xScale(d.value))
 
@@ -283,7 +283,7 @@ function updateGraph(dataContainer) {
 function updateCountry(countryId) {
 	// deselect all bars
 	const bounds = getBoundsOfFactor(currentData)
-	d3.selectAll('rect').attr('fill', d => calcFillColor(d.value, bounds))
+	d3.selectAll('.bar').attr('fill', d => calcFillColor(d.value, bounds))
 	// set clicked bar as selected
 	d3.select(`[data-country=${countryId}]`).attr('fill', theme().selection)
 }
