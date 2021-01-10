@@ -61,10 +61,7 @@ function createScatterPlot(dataContainer) {
 			.append('g')
 			.classed('axisLabel', true)
 			//.attr('transform', 'translate(' + (theme().marginLarge + width / 2) + ',' + (height + 2 * theme().marginLarge - 12) + ')')
-			.attr(
-				'transform',
-				'translate(' + (theme().marginLarge + width) + ',' + (height + theme().margin + theme().maxScatterPoint - 15) + ')'
-			)
+			.attr('transform', 'translate(' + (theme().marginLarge + width) + ',' + (height + theme().margin + theme().maxScatterPoint - 15) + ')')
 			.append('text')
 			.attr('fill', theme().font)
 			.attr('dominant-baseline', 'hanging')
@@ -130,7 +127,7 @@ function createScatterPlot(dataContainer) {
 			.attr('dy', d => -size(d) + size(count - 1))
 			.attr('fill', theme().font)
 			.style('font-size', theme().fontSizeAxis)
-			.text(d => Math.round(bounds.min + bounds.span * (d / (count - 1))) + factorUnit[selectedFactor.value])
+			.text(d => Math.round(bounds.min + bounds.span * ((count - d) / (count - 1)) + bounds.span / count / 2) + factorUnit[selectedFactor.value])
 
 		elems
 			.append('line')
@@ -148,12 +145,14 @@ function createScatterPlot(dataContainer) {
 			.attr('fill', theme().font)
 			.style('font-size', theme().fontSizeAxis)
 
-		label.append('tspan').text(factorExplanation[selectedFactor.value].split(' ').slice(0, 3).join(' '))
+		const labelWords = factorExplanation[selectedFactor.value].split(' ')
+
+		label.append('tspan').text(labelWords.slice(0, Math.ceil(labelWords.length / 2)).join(' '))
 		label
 			.append('tspan')
 			.attr('x', 0)
 			.attr('dy', theme().fontSizeAxis + 3)
-			.text(factorExplanation[selectedFactor.value].split(' ').slice(3).join(' '))
+			.text(labelWords.slice(Math.ceil(labelWords.length / 2)).join(' '))
 	}
 
 	//Cleans the data for usage in the scatter plot
