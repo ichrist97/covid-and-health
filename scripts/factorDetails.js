@@ -136,9 +136,7 @@ function renderBars(data, selectedCountry, selectedFactor, bounds) {
 				.attr('fill', d => {
 					// only change when bar is not selected
 					const country = event.target.getAttribute('data-country')
-					return country !== selectedCountry.value
-						? calcFillColor(d.value, bounds)
-						: theme().selection
+					return country !== selectedCountry.value ? calcFillColor(d.value, bounds) : theme().selection
 				})
 				.style('cursor', 'default')
 		})
@@ -173,28 +171,16 @@ function renderBars(data, selectedCountry, selectedFactor, bounds) {
 			return yScale(d.country) + yScale.bandwidth() * 0.5
 		})
 		.attr('font-family', 'sans-serif')
-		.attr('font-size', '80%')
+		.attr('font-size', '60%')
 		.attr('fill', d => {
 			const readable = determineTextReadability(d.value, bounds)
 			return readable ? 'white' : 'black'
-		})
-		// stroke is text background for readability
-		.attr('stroke', d => {
-			const readable = determineTextReadability(d.value, bounds)
-			return readable ? 'black' : 'white'
 		})
 		.attr('stroke-width', '1px')
 		.attr('stroke-opacity', 0.2)
 		.attr('text-anchor', d => {
 			const readable = determineTextReadability(d.value, bounds)
 			return readable ? 'end' : 'start'
-		})
-		// only show every second label at larger numbers for readability
-		.attr('display', d => {
-			if (index > 20 && d.index % 2 !== 0) {
-				return 'none'
-			}
-			return 'block'
 		})
 		.attr('dominant-baseline', 'central')
 
@@ -210,11 +196,7 @@ function renderBars(data, selectedCountry, selectedFactor, bounds) {
 
 	// add the xAxis
 	svg.selectAll('.xAxis').remove() // remove old axis
-	svg
-		.append('g')
-		.attr('class', 'xAxis')
-		.attr('transform', `translate(0,${height})`)
-		.call(d3.axisBottom(xScale))
+	svg.append('g').attr('class', 'xAxis').attr('transform', `translate(0,${height})`).call(d3.axisBottom(xScale))
 
 	// xAxis label
 	const label = factorExplanation[selectedFactor.value]
