@@ -33,7 +33,10 @@ function createScatterPlot(dataContainer) {
 
 	const xAxis = svg
 		.append('g')
-		.attr('transform', 'translate(' + theme().marginLarge + ',' + (height + theme().margin + theme().maxScatterPoint) + ')')
+		.attr(
+			'transform',
+			'translate(' + theme().marginLarge + ',' + (height + theme().margin + theme().maxScatterPoint) + ')'
+		)
 		.call(d3.axisBottom(x).ticks(12, '.0f'))
 
 	styleAxis(xAxis)
@@ -61,7 +64,14 @@ function createScatterPlot(dataContainer) {
 			.append('g')
 			.classed('axisLabel', true)
 			//.attr('transform', 'translate(' + (theme().marginLarge + width / 2) + ',' + (height + 2 * theme().marginLarge - 12) + ')')
-			.attr('transform', 'translate(' + (theme().marginLarge + width) + ',' + (height + theme().margin + theme().maxScatterPoint - 15) + ')')
+			.attr(
+				'transform',
+				'translate(' +
+					(theme().marginLarge + width) +
+					',' +
+					(height + theme().margin + theme().maxScatterPoint - 15) +
+					')'
+			)
 			.append('text')
 			.attr('fill', theme().font)
 			.attr('dominant-baseline', 'hanging')
@@ -74,7 +84,10 @@ function createScatterPlot(dataContainer) {
 		const yLabel = svg
 			.append('g')
 			.classed('axisLabel', true)
-			.attr('transform', 'translate(' + (theme().marginLarge - theme().maxScatterPoint + 10) + ',' + theme().margin + ')')
+			.attr(
+				'transform',
+				'translate(' + (theme().marginLarge - theme().maxScatterPoint + 10) + ',' + theme().margin + ')'
+			)
 			.append('text')
 			.attr('fill', theme().font)
 			.attr('dominant-baseline', 'hanging')
@@ -127,7 +140,11 @@ function createScatterPlot(dataContainer) {
 			.attr('dy', d => -size(d) + size(count - 1))
 			.attr('fill', theme().font)
 			.style('font-size', theme().fontSizeAxis)
-			.text(d => Math.round(bounds.min + bounds.span * ((count - d) / (count - 1)) + bounds.span / count / 2) + factorUnit[selectedFactor.value])
+			.text(
+				d =>
+					Math.round(bounds.min + bounds.span * ((count - d) / (count - 1)) + bounds.span / count / 2) +
+					factorUnit[selectedFactor.value]
+			)
 
 		elems
 			.append('line')
