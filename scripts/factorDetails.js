@@ -118,9 +118,10 @@ function renderBars(data, selectedCountry, selectedFactor, bounds) {
 		.attr('data-country', d => d.id)
 		// highlight selected country
 		.attr('fill', d => {
-			return calcFillColor(d.value, bounds)
+			return calcFillColor(d.value, bounds, d.id, selectedCountry)
 		})
 		// user hovers over bar
+
 		.on('mouseenter', event => {
 			d3.select(event.target)
 				.attr('fill', d => {
@@ -130,22 +131,18 @@ function renderBars(data, selectedCountry, selectedFactor, bounds) {
 				})
 				.style('cursor', 'pointer')
 		})
+
 		// user leaves bar
+
 		.on('mouseleave', event => {
 			d3.select(event.target)
 				.attr('fill', d => {
-					// only change when bar is not selected
-					const country = event.target.getAttribute('data-country')
-					return country !== selectedCountry.value ? calcFillColor(d.value, bounds) : theme().selection
+					return calcFillColor(d.value, bounds, d.id, selectedCountry)
 				})
 				.style('cursor', 'default')
 		})
 		// user clicks bar
 		.on('click', event => {
-			// deselect all bars
-			d3.selectAll('.bar').attr('fill', d => calcFillColor(d.value, bounds))
-			// set clicked bar as selected
-			d3.select(event.target).attr('fill', theme().selection)
 			// update observable
 			const country = event.target.getAttribute('data-country')
 			selectedCountry.update(country)
@@ -218,7 +215,11 @@ function renderBars(data, selectedCountry, selectedFactor, bounds) {
  * @param {*} value
  * @param {*} bounds
  */
-function calcFillColor(value, bounds) {
+function calcFillColor(value, bounds, country, selectedCountry) {
+	if (country == selectedCountry.value) {
+		return theme().selection
+	}
+
 	const t = 1 - (value - bounds.min) / bounds.span
 	return theme().primaryBlend(t)
 }
@@ -262,12 +263,12 @@ function updateGraph(dataContainer) {
 	renderBars(currentData, selectedCountry, selectedFactor, bounds)
 }
 
-function updateCountry(countryId) {
+function updateCountry(selectedCountry) {
 	// deselect all bars
 	const bounds = getBoundsOfFactor(currentData)
-	d3.selectAll('.bar').attr('fill', d => calcFillColor(d.value, bounds))
+	d3.selectAll('.bar').attr('fill', d => calcFillColor(d.value, bounds, d.id, selectedCountry))
 	// set clicked bar as selected
-	d3.select(`[data-country=${countryId}]`).attr('fill', theme().selection)
+	d3.select(`[data-country=${selectedCountry.value}]`).attr('fill', theme().selection)
 }
 
 function createFactorDetails(dataContainer) {
@@ -279,7 +280,7 @@ function createFactorDetails(dataContainer) {
 
 	//subscribe to  observables
 	selectedFactor.subscribe(() => updateGraph(dataContainer))
-	selectedCountry.subscribe(() => updateCountry(selectedCountry.value))
+	selectedCountry.subscribe(() => updateCountry(selectedCountry))
 }
 
 export { createFactorDetails }

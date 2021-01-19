@@ -3,11 +3,15 @@
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
+
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 #country-details h2 {
 	margin: 0;
-	font-size: 2vw;
+	font-size: 4vh;
 	padding-top: 0.1em;
 	padding-left: 1em;
 	font-weight: bold;
@@ -15,7 +19,7 @@
 
 #country-details h3 {
 	margin: 0;
-	font-size: 1vw;
+	font-size: 2vh;
 	padding-left: 2em;
 	font-weight: normal;
 }

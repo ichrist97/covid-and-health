@@ -126,6 +126,31 @@ function formatFactor(factor) {
 	return format
 }
 
+function getFactorUnit(factor) {
+	let unit
+	switch (factor) {
+		case 'smoking':
+			unit = '%'
+			break
+		case 'obesity':
+			unit = '%'
+			break
+		case 'alcohol':
+			unit = 'litre/capita'
+			break
+		case 'hospitalBeds':
+			unit = 'beds/1000 inhabitants'
+			break
+		case 'healthSpendings':
+			unit = '%'
+			break
+		default:
+			unit = ''
+			break
+	}
+	return unit
+}
+
 export {
 	loadData,
 	FACTORS,
@@ -135,4 +160,5 @@ export {
 	factorDetailExplanation,
 	factorUnit,
 	formatFactor,
+	getFactorUnit,
 }

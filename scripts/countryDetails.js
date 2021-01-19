@@ -1,4 +1,4 @@
-import { formatFactor } from './data.js'
+import { getFactorUnit } from './data.js'
 
 function renderCountryDetails(dataContainer) {
 	const { data, selectedFactor, selectedCountry, selectedWeek } = dataContainer
@@ -75,9 +75,10 @@ function setFactorValue(data, selectedCountry, selectedFactor) {
 	const element = document.querySelector('#selected-health-factor')
 	const factorData = data[selectedCountry][selectedFactor]
 	if (factorData) {
-		element.innerText = factorData.value
+		const unit = getFactorUnit(selectedFactor)
+		element.innerText = `${factorData.value} ${unit}`
 	} else {
-		element.innerText = 'N/A'
+		element.innerText = 'Not available'
 	}
 }
 

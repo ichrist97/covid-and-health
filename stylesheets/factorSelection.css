@@ -15,7 +15,7 @@
 	border-radius: 10px;
 	background-color: #ababab;
 	width: 10vw;
-	height: 2vh;
+	height: 3vh;
 	text-align: center;
 	padding: 0.5em;
 	margin: 0.1em;
@@ -48,7 +48,6 @@
 }
 
 .tooltip-text {
-	visibility: hidden;
 	width: 120px;
 	background-color: white;
 	color: black;
@@ -59,26 +58,42 @@
 
 	/* Position the tooltip */
 	position: absolute;
+	/*
 	z-index: 1;
 	top: -5px;
-	right: 105%;
+  right: 105%;
+  */
+	z-index: 2;
+	bottom: 100%;
+	left: 50%;
+	margin-left: -60px; /* Use half of the width (120/2 = 60), to center the tooltip */
 
 	/* delay tooltip */
-	transition: 0.4s visibility;
+	visibility: hidden;
+	transition: visibility 0.4s;
+	transition-delay: 0.8s;
+
+	user-select: none;
 }
 
 .factor:hover .tooltip-text {
 	visibility: visible;
-	transition-delay: 1s;
 }
 
 .tooltip-text::after {
 	content: ' ';
 	position: absolute;
-	top: 50%;
-	left: 100%; /* To the right of the tooltip */
+	top: 100%; /* at the bottom of the tooltip */
+	left: 50%;
 	margin-top: -5px;
 	border-width: 5px;
 	border-style: solid;
 	border-color: transparent transparent transparent white;
+}
+
+/* cap factor size for small screens */
+@media only screen and (max-width: 120em) {
+	.factor {
+		height: 2vh;
+	}
 }
