@@ -81,7 +81,13 @@ function createTimeline(dataContainer) {
 	//Create an indicator for the currently selected week with a fake shadow
 	const idc = svg.append('g')
 	idc.append('circle').attr('r', theme().timelineIndicator).attr('fill', '#00000055').attr('cy', 2)
-	idc.append('circle').attr('r', theme().timelineIndicator).attr('fill', theme().axis)
+	idc
+		.append('circle')
+		.attr('r', theme().timelineIndicator)
+		.attr('fill', theme().axis)
+		.on('mouseenter', event => {
+			d3.select(event.target).style('cursor', 'pointer')
+		})
 
 	//Tracks whether the indicator was clicked
 	var isIdcDragged = false
