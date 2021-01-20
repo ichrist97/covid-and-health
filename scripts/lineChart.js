@@ -4,12 +4,9 @@ function createLineChart(dataContainer) {
 	//destructure data container
 	const { data, selectedCountry } = dataContainer
 
-	console.log(selectedCountry.value)
-
 	//find the start week of the data
 	const firstWeek = Math.min(
 		...Object.values(data).map(x => {
-			//console.log(Object.keys(x.covid))
 			return Math.min(...Object.keys(x.covid))
 		})
 	)
@@ -49,7 +46,7 @@ function createLineChart(dataContainer) {
 		const returnData = []
 		const dataWorldwide = []
 		const casesWorldwide = []
-		var sum = 0
+		let sum = 0
 
 		//extract data for selected country
 		for (let index = 0; index < data.length; index++) {
@@ -74,28 +71,19 @@ function createLineChart(dataContainer) {
 			if (data.data[i].cases > max) {
 				max = data.data[i].cases
 			}
-			console.log(data.data[i])
 		}
-		console.log(max)
 		return max
 	}
 
-	console.log(maxInfections)
-
 	const filteredData = filterData()
-	console.log(filteredData)
 
 	const lineChartData = reduceData(filteredData, selectedCountry.value)
-	console.log(lineChartData)
-
-	//const height = parseFloat(svg.style('height'))
-	//const width = parseFloat(svg.style('width')) - 2 * theme().margin
 
 	// set the dimensions and margins of the graph
 	const graph = document.querySelector('#lineChart')
 	const offsetWidth = graph.offsetWidth
 	const offsetHeight = graph.offsetHeight
-	const margin = { top: 10, right: 10, bottom: 10, left: 10 },
+	const margin = { top: 10, right: 30, bottom: 20, left: 30 },
 		width = offsetWidth - margin.left - margin.right,
 		height = offsetHeight - margin.top - margin.bottom
 
@@ -105,21 +93,18 @@ function createLineChart(dataContainer) {
 		.attr('width', width + margin.left + margin.right)
 		.attr('height', height + margin.top + margin.bottom)
 
-	const container = svg.append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+	const container = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`)
 
 	function plotLineChart(data) {
 		//set up the x axis
 		const xValue = d3.scaleLinear().domain([firstWeek, finalWeek]).range([0, width])
 
-		var xA = svg
+		svg.selectAll('.xAxis').remove()
+		let xA = svg
 			.append('g')
-			.attr('transform', 'translate(' + theme().margin + ',' + offsetHeight + ')')
-			.call(
-				d3
-					.axisBottom(xValue)
-					.tickSize(7)
-					.tickValues(d3.range(weekDiff / 2 + 1).map(x => firstWeek + x * 2))
-			)
+			.attr('class', 'xAxis')
+			.attr('transform', `translate(${margin.left},${height + margin.top})`)
+			.call(d3.axisBottom(xValue).tickValues(d3.range(weekDiff / 2 + 1).map(x => firstWeek + x * 2)))
 
 		styleAxis(xA)
 
@@ -127,22 +112,20 @@ function createLineChart(dataContainer) {
 		const yValue = d3
 			.scaleLinear()
 			.domain([
-				1,
+				0,
 				d3.max(data[0].data, d => {
 					return d.cases
 				}),
 			])
-			.range([offsetHeight, 0])
-			.clamp(true)
-			.nice()
+			.range([height, 0])
 
+		// remove old yAxis
 		svg.selectAll('.yAxis').remove()
-
-		var yA = svg
+		let yA = svg
 			.append('g')
 			.attr('class', 'yAxis')
-			.attr('transform', 'translate(' + theme().margin + ',' + 0 + ')')
-			.call(d3.axisLeft(yValue).ticks(12, '.0f'))
+			.attr('transform', `translate(${margin.left},${margin.top})`)
+			.call(d3.axisLeft(yValue).ticks(6))
 
 		styleAxis(yA)
 
@@ -157,7 +140,7 @@ function createLineChart(dataContainer) {
 			})
 
 		//---drawing---//
-		container.selectAll('.line').remove()
+		container.selectAll('.line').remove() // remove old line
 		const lines = container
 			.selectAll('lines')
 			.data(data, d => d)
@@ -165,10 +148,13 @@ function createLineChart(dataContainer) {
 			.attr('class', 'line')
 		lines
 			.append('path')
-			.attr('stroke', 'black')
+			.attr('y', d => {
+				return yValue(d.cases)
+			})
+			.attr('stroke', theme().primaryA)
 			.attr('fill', 'none')
-			//.attr('stroke-width', 0.5)
-			.attr('d', function (d) {
+			.attr('stroke-width', 2)
+			.attr('d', d => {
 				return line(d.data)
 			})
 	}
