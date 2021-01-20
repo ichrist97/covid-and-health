@@ -11,18 +11,18 @@ function renderCountryDetails(dataContainer) {
 
 	//subscribe to  observables
 	selectedFactor.subscribe(() => setFactorValue(data, selectedCountry.value, selectedFactor.value))
-	selectedCountry.subscribe(() =>
-		updateCovidData(data, selectedCountry.value, selectedWeek.value, selectedFactor.value)
-	)
-	selectedWeek.subscribe(() => updateCovidData(data, selectedCountry.value, selectedWeek.value))
-}
-
-function updateCovidData(data, selectedCountry, selectedWeek, selectedFactor) {
-	setPopulation(data, selectedCountry)
-	setInfections(data, selectedCountry, selectedWeek)
-	setDeaths(data, selectedCountry, selectedWeek)
-	setCountryTitle(data, selectedCountry)
-	setFactorValue(data, selectedCountry, selectedFactor)
+	selectedCountry.subscribe(() => {
+		setPopulation(data, selectedCountry.value)
+		setInfections(data, selectedCountry.value, selectedWeek.value)
+		setDeaths(data, selectedCountry.value, selectedWeek.value)
+		setCountryTitle(data, selectedCountry.value)
+		setFactorValue(data, selectedCountry.value, selectedFactor.value)
+	})
+	selectedWeek.subscribe(() => {
+		setPopulation(data, selectedCountry.value)
+		setInfections(data, selectedCountry.value, selectedWeek.value)
+		setDeaths(data, selectedCountry.value, selectedWeek.value)
+	})
 }
 
 function setPopulation(data, selectedCountry) {
