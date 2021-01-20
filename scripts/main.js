@@ -5,6 +5,7 @@ import { createTimeline } from './timeline.js'
 import { setupFactors } from './factorSelection.js'
 import { renderCountryDetails } from './countryDetails.js'
 import { initHelpModal } from './help.js'
+import { createLineChart } from './lineChart.js'
 
 async function buildVisualization() {
 	const dataContainer = await loadData()
@@ -14,6 +15,7 @@ async function buildVisualization() {
 	createScatterPlot(dataContainer)
 	createTimeline(dataContainer)
 	renderCountryDetails(dataContainer)
+	createLineChart(dataContainer)
 
 	// deactivate loading animation and activate button to leave introduction at first start of session
 	if (sessionStorage.getItem('seenIntroduction') === null) {
