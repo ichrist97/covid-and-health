@@ -58,11 +58,6 @@
 
 	/* Position the tooltip */
 	position: absolute;
-	/*
-	z-index: 1;
-	top: -5px;
-  right: 105%;
-  */
 	z-index: 2;
 	bottom: 100%;
 	left: 50%;
@@ -70,14 +65,18 @@
 
 	/* delay tooltip */
 	visibility: hidden;
-	transition: visibility 0.4s;
-	transition-delay: 0.8s;
+	opacity: 0;
+	transition: opacity 0.1s 0 ease;
 
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-o-user-select: none;
 	user-select: none;
 }
 
 .factor:hover .tooltip-text {
 	visibility: visible;
+	opacity: 1;
 }
 
 .tooltip-text::after {

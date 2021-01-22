@@ -3,25 +3,31 @@
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
-
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
 }
 
 #country-details h2 {
 	margin: 0;
 	font-size: 4vh;
 	padding-top: 0.1em;
-	padding-left: 1em;
+	padding-left: 1vw;
 	font-weight: bold;
+
+	/* shorten text if too long*/
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 #country-details h3 {
 	margin: 0;
 	font-size: 2vh;
-	padding-left: 2em;
+	padding-left: 1vw;
 	font-weight: normal;
+
+	/* shorten text if too long*/
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .country-detail {

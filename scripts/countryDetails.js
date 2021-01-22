@@ -1,4 +1,4 @@
-import { getFactorUnit } from './data.js'
+import { getFactorUnit, formatFactor } from './data.js'
 
 function renderCountryDetails(dataContainer) {
 	const { data, selectedFactor, selectedCountry, selectedWeek } = dataContainer
@@ -72,13 +72,19 @@ function sumCovidData(data, category, selectedCountry, selectedWeek) {
 }
 
 function setFactorValue(data, selectedCountry, selectedFactor) {
-	const element = document.querySelector('#selected-health-factor')
+	// dom elements
+	const factorValue = document.querySelector('#selected-health-factor')
+	const factorName = document.querySelector('#selected-health-factor-name')
+	// set factor name
+	factorName.innerText = formatFactor(selectedFactor)
+
+	// update data only when available for country, else not available
 	const factorData = data[selectedCountry][selectedFactor]
 	if (factorData) {
 		const unit = getFactorUnit(selectedFactor)
-		element.innerText = `${factorData.value} ${unit}`
+		factorValue.innerText = `${factorData.value} ${unit}`
 	} else {
-		element.innerText = 'Not available'
+		factorValue.innerText = 'Not available'
 	}
 }
 
