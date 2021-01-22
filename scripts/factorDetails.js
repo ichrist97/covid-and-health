@@ -121,7 +121,6 @@ function renderBars(data, selectedCountry, selectedFactor, bounds) {
 			return calcFillColor(d.value, bounds, d.id, selectedCountry)
 		})
 		// user hovers over bar
-
 		.on('mouseenter', event => {
 			d3.select(event.target)
 				.attr('fill', d => {
@@ -133,7 +132,6 @@ function renderBars(data, selectedCountry, selectedFactor, bounds) {
 		})
 
 		// user leaves bar
-
 		.on('mouseleave', event => {
 			d3.select(event.target)
 				.attr('fill', d => {
