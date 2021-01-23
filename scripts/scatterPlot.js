@@ -141,9 +141,7 @@ function createScatterPlot(dataContainer) {
 			.attr('fill', theme().font)
 			.style('font-size', theme().fontSizeAxis)
 			.text(
-				d =>
-					Math.round(bounds.min + bounds.span * ((count - d) / (count - 1)) + bounds.span / count / 2) +
-					factorUnit[selectedFactor.value]
+				d => Math.round(bounds.min + bounds.span * ((count - d - 1) / (count - 1))) + factorUnit[selectedFactor.value]
 			)
 
 		elems
