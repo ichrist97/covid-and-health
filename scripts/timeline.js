@@ -28,7 +28,7 @@ function createTimeline(dataContainer) {
 
 	//Grab the svg element and store some properties for convenience
 	const svg = d3.select('#timeline').select('.plot')
-	const width = parseFloat(svg.style('width')) - 2 * theme().margin
+	const width = parseFloat(svg.style('width')) - 2 * theme().marginLarge
 	const height = parseFloat(svg.style('height'))
 
 	//Create an axis for displaying the timeline
@@ -36,7 +36,7 @@ function createTimeline(dataContainer) {
 
 	const axis = svg
 		.append('g')
-		.attr('transform', 'translate(' + theme().margin + ',' + height / 2 + ')')
+		.attr('transform', 'translate(' + theme().marginLarge + ',' + height / 2 + ')')
 		.call(
 			d3
 				.axisTop(x)
@@ -44,7 +44,7 @@ function createTimeline(dataContainer) {
 				.tickValues(d3.range(weekDelta / 2 + 1).map(x => startWeek + x * 2))
 		)
 
-	axis.selectAll('text').attr('y', -15)
+	axis.selectAll('text').attr('y', -12)
 	styleAxis(axis)
 
 	//const moths = d3.scaleBand().domain(['January', 'February', 'March', 'April', 'May']).range([0, width])
@@ -55,7 +55,7 @@ function createTimeline(dataContainer) {
 
 	const monthsAxis = svg
 		.append('g')
-		.attr('transform', 'translate(' + theme().margin + ',' + height / 2 + ')')
+		.attr('transform', 'translate(' + theme().marginLarge + ',' + height / 2 + ')')
 		.call(d3.axisBottom(months).tickSize(0).ticks(12, '%B'))
 
 	styleAxis(monthsAxis)
@@ -64,19 +64,25 @@ function createTimeline(dataContainer) {
 	monthsAxis
 		.selectAll('text')
 		.attr('x', width / 12 / 2)
-		.attr('y', 23)
+		.attr('y', 12)
 
 	monthsAxis.select('.domain').remove()
 
-	svg
+	//Add a label for the timeline axis
+	const label = svg
+		.append('g')
+		.attr('transform', 'translate(' + (width + theme().marginLarge + 15) + ',' + height / 2 + ')')
 		.append('text')
-		.attr('x', width + theme().margin)
-		.attr('y', height / 2 + 5)
-		.attr('text-anchor', 'end')
-		.attr('dominant-baseline', 'hanging')
+		.attr('text-anchor', 'start')
+		.attr('dominant-baseline', 'auto')
 		.attr('fill', theme().font)
 		.style('font-size', theme().fontSizeAxis)
-		.text('weeks of the year 2020')
+
+	label
+		.append('tspan')
+		.attr('dy', -theme().fontSizeAxis - 2)
+		.text('week')
+	label.append('tspan').attr('x', 0).attr('y', 0).text('of 2020')
 
 	//Create an indicator for the currently selected week with a fake shadow
 	const idc = svg.append('g')
@@ -97,7 +103,7 @@ function createTimeline(dataContainer) {
 	function updateTimeline() {
 		const progress = (selectedWeek.value - startWeek) / weekDelta
 		//idc.attr('cy', height / 2).attr('cx', Theme().margin + width * progress)
-		idc.attr('transform', 'translate(' + (theme().margin + width * progress) + ',' + height / 2 + ')')
+		idc.attr('transform', 'translate(' + (theme().marginLarge + width * progress) + ',' + height / 2 + ')')
 	}
 
 	//Sets the week depending on the mouse position over the timeline
@@ -105,8 +111,8 @@ function createTimeline(dataContainer) {
 		const rect = svg.node().getBoundingClientRect()
 		x = x - rect.left
 
-		const width = rect.width - theme().margin * 2
-		const dist = (x - theme().margin) / width
+		const width = rect.width - theme().marginLarge * 2
+		const dist = (x - theme().marginLarge) / width
 
 		const weekPoint = Math.round(dist * weekDelta + startWeek)
 		const week = Math.max(Math.min(weekPoint, endWeek), startWeek)

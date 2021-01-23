@@ -1,3 +1,5 @@
+[![Netlify Status](https://api.netlify.com/api/v1/badges/f8a4f57a-a817-48f3-98de-1df9d03af9cb/deploy-status)](https://app.netlify.com/sites/covid-and-health/deploys)
+
 # Covid and Health [Group 20]
 
 ### Project for the masters course on information visualization at LMU Munich WS 20/12
