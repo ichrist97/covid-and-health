@@ -68,25 +68,6 @@ function createTimeline(dataContainer) {
 
 	monthsAxis.select('.domain').remove()
 
-	//Add a label for the timeline axis
-	/*
-	const label = svg
-		.append('g')
-		.attr('transform', 'translate(' + (width + theme().margin + 15) + ',' + height / 2 + ')')
-		.append('text')
-		.attr('text-anchor', 'start')
-		.attr('dominant-baseline', 'auto')
-		.attr('fill', theme().font)
-		.style('font-size', theme().fontSizeAxis)
-
-
-	label
-		.append('tspan')
-		.attr('dy', -theme().fontSizeAxis - 2)
-		.text('week')
-  label.append('tspan').attr('x', 0).attr('y', 0).text('of 2020')
-  */
-
 	//Create an indicator for the currently selected week with a fake shadow
 	const idc = svg.append('g')
 	idc.append('circle').attr('r', theme().timelineIndicator).attr('fill', '#00000055').attr('cy', 2)
@@ -105,7 +86,6 @@ function createTimeline(dataContainer) {
 	//Updates the scatter plot
 	function updateTimeline() {
 		const progress = (selectedWeek.value - startWeek) / weekDelta
-		//idc.attr('cy', height / 2).attr('cx', Theme().margin + width * progress)
 		idc.attr('transform', 'translate(' + (theme().margin + width * progress) + ',' + height / 2 + ')')
 	}
 
