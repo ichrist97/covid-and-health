@@ -1,3 +1,46 @@
 #lineChart {
 	grid-area: 7 / 1 / 10 / 2;
+	position: relative;
+}
+
+#covid-data-toogle-container {
+	position: absolute;
+	top: 50px;
+	left: 40px;
+	margin: 0 auto;
+
+	display: flex;
+}
+
+#covid-data-toogle-container .covid-data-toogle {
+	padding: 0.4em;
+	border: 1px solid black;
+	width: 5em;
+	text-align: center;
+	background-color: #ababab;
+	font-size: 0.8em;
+}
+
+#covid-data-toogle-container .covid-data-toogle.left {
+	border-top-left-radius: 10px;
+	border-bottom-left-radius: 10px;
+}
+
+#covid-data-toogle-container .covid-data-toogle.right {
+	border-top-right-radius: 10px;
+	border-bottom-right-radius: 10px;
+}
+
+#covid-data-toogle-container .covid-data-toogle.checked {
+	background-color: #e6550d;
+}
+
+#covid-data-toogle-container .covid-data-toogle.checked:hover {
+	cursor: pointer;
+	background-color: #e6550d;
+}
+
+#covid-data-toogle-container .covid-data-toogle:hover {
+	cursor: pointer;
+	background-color: #bcbcbc;
 }

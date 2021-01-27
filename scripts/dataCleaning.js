@@ -75,14 +75,13 @@ function insertOECDData(data, oecdData, name) {
 	oecdData.forEach(x => {
 		const country = x.LOCATION
 
+		// only insert oecd data if country found in data
 		if (country in data) {
 			const info = { value: x.Value, year: x.TIME }
 
 			if (!(name in data[country]) || data[country][name].year < info.year) {
 				data[country][name] = info
 			}
-		} else {
-			console.log(`cannot insert ${name} data for ${country}. country not found.`)
 		}
 	})
 }
@@ -99,8 +98,8 @@ function removeIncompconsteEntries(data, args) {
 				if (!(a in value)) result = a
 			})
 
+			// removed missing value
 			if (result) {
-				console.log(`removed ${value.name}. missing data ${result}`)
 				return true
 			}
 

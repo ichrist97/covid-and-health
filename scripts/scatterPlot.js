@@ -141,9 +141,7 @@ function createScatterPlot(dataContainer) {
 			.attr('fill', theme().font)
 			.style('font-size', theme().fontSizeAxis)
 			.text(
-				d =>
-					Math.round(bounds.min + bounds.span * ((count - d) / (count - 1)) + bounds.span / count / 2) +
-					factorUnit[selectedFactor.value]
+				d => Math.round(bounds.min + bounds.span * ((count - d - 1) / (count - 1))) + factorUnit[selectedFactor.value]
 			)
 
 		elems
@@ -215,7 +213,7 @@ function createScatterPlot(dataContainer) {
 		return theme().primaryBlend(t)
 	}
 
-	//Compues the sort order for two countries
+	//Computes the sort order for two countries
 	function compareCountries(a, b) {
 		if (a.country == selectedCountry.value) return 1
 		if (b.country == selectedCountry.value) return -1
@@ -274,6 +272,8 @@ function createScatterPlot(dataContainer) {
 			.attr('cx', d => x(d.cases))
 			.attr('cy', d => y(d.deaths))
 			.style('fill', d => dotFill(d.factor, bounds, d.country))
+			.style('stroke', theme().primaryOutline)
+			.style('stroke-width', '1')
 
 		enter
 			.transition()
@@ -282,18 +282,25 @@ function createScatterPlot(dataContainer) {
 
 		update.exit().transition(d3.easeBackIn).duration(theme().transitionDuration).attr('r', 0).remove()
 
-		update
-			.merge(enter)
+		//Sort elements and apply event callbacks
+		const set = update.merge(enter)
+
+		set
 			.sort(compareCountries)
 			.on('click', (e, d) => selectedCountry.update(d.country))
 			.on('mouseenter', (e, d) => {
+				d3.select(e.currentTarget).style('fill', theme().hover).raise()
 				showTooltip(e, d)
-				d3.select(e.currentTarget).style('fill', theme().hover)
 			})
 			.on('mouseleave', (e, d) => {
 				clearTooltip(e, d)
 				d3.select(e.currentTarget).style('fill', dotFill(d.factor, bounds, d.country))
+				set.sort(compareCountries)
 			})
+
+		//Update tooltip coloring
+		//Only applied when selecting a country on the scatter plot
+		container.selectAll('.tooltip').select('rect').attr('fill', 'blue')
 	}
 
 	//Updates the scatter plot

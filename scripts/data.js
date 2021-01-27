@@ -88,8 +88,8 @@ async function loadData() {
 	insertOECDData(DATA, DATA_HOSPITALBEDS, FACTORS.HOSPITALBEDS)
 	insertOECDData(DATA, DATA_OBESITY, FACTORS.OBESITY)
 
-	console.log(`data of ${Object.keys(DATA).length} countries and regions found`)
-	console.log(DATA)
+	//console.log(`data of ${Object.keys(DATA).length} countries and regions found`)
+	//console.log(DATA)
 
 	return {
 		data: DATA,

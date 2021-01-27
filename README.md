@@ -1,6 +1,44 @@
-# Covid and Health [Group 20]
+# Covid19 and Health [Group 20]
 
-### Project for the masters course on information visualization at LMU Munich WS 20/12
+[![Netlify Status](https://api.netlify.com/api/v1/badges/f8a4f57a-a817-48f3-98de-1df9d03af9cb/deploy-status)](https://app.netlify.com/sites/covid-and-health/deploys)
+
+## How to use the application
+
+### Online (Recommended)
+
+You can access the application in the web by this [link](https://covid-and-health.netlify.app/).
+
+### Run it locally on your PC
+
+To run the application correctly it must be served via a local HTTP server.
+
+Software requirements:
+
+- Node.js & NPM ([Download](https://nodejs.org/en/download/))
+
+After installation run the following commands in a terminal:
+
+```
+$ npm install -g http-server
+
+$ cd <path-to-repository>
+
+$ http-server
+```
+
+Then you can access the application in a browser under `http://localhost:8080` or `http://127.0.0.1:8080`
+
+### Supported browsers
+
+- Google Chrome
+- Firefox
+- Safari
+
+Other browsers might but are not guaranteed to work.
+
+---
+
+## Project description - masters course on information visualization at LMU Munich WS 20/12
 
 ### Components
 
@@ -18,32 +56,25 @@ An **overview line plot** shows the infection or death rates for all countries o
 
 ---
 
-### Completed
+## Feature list
 
-- **Death rate**
+- **Death rate depiction**\
+  Scatter plot which depicts the ratio between deaths and infections dependent on selected health factor.
 
-  Scatter plot which depicts the ratio between deaths and infections dependent on selected health factor
+- **Timeline in calender weeks**\
+  Select Covid19 data for different calender week of year 2020. Each calender week changes the death rate depiction.
 
-- **Timeline**
+- **Health factor selection**\
+  Select a health factor and lookup effect on death rate.
 
-  Select Covid19 data for different calender week of year 2020
+- **Health factor details**\
+  Bar chart which shows the "healthiness" regaring the selected factor among the countries.
 
-- **Health factor selection**
+- **Selected country details**\
+  Overview of details and important metrics for a single selected country.
 
-  Select a health factor and lookup effect on death rate
+- **Help information**\
+  Toogle a pop-up which provides further descriptions about the project and explanations about the given health factors.
 
-- **Health factor details**
-
-  Bar chart which shows the 'healthiness' regaring the selected factor among the countries
-
-- **Selected country details**
-
-  Overview of details and important metrics for a single selected country
-
-### Work in Progress
-
-- Linechart which shows overview of overall covid19 development
-
-### Backlog
-
-- Interaction & Brushing by filtering countries
+- **Progress of infections and deaths througout the year 2020**\
+  A line chart which shows the development of infections or deaths for each country based on the user's selection.

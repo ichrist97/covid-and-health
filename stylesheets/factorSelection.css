@@ -8,13 +8,13 @@
 	align-items: center;
 
 	/* use scrolling if necessary, but don't show a horizontal scrollbar */
-	/*overflow: auto;*/
+	overflow: auto;
 }
 
 .factor {
 	border-radius: 10px;
 	background-color: #ababab;
-	width: 10vw;
+	width: 40%;
 	height: 3vh;
 	text-align: center;
 	padding: 0.5em;
@@ -31,63 +31,16 @@
 .factor p {
 	padding: 0;
 	margin: 0;
-	font-size: 14px;
+	font-size: 1em;
 }
 
-.factor:hover:not(.checked) {
+.factor:hover {
 	background-color: #bcbcbc;
 	cursor: pointer;
 }
 
-.factor.checked:hover {
-	cursor: default;
-}
-
-.checked {
+.factor.checked {
 	background-color: #e6550d;
-}
-
-.tooltip-text {
-	width: 120px;
-	background-color: white;
-	color: black;
-	text-align: center;
-	border-radius: 6px;
-	padding: 5px 0;
-	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-
-	/* Position the tooltip */
-	position: absolute;
-	z-index: 2;
-	bottom: 100%;
-	left: 50%;
-	margin-left: -60px; /* Use half of the width (120/2 = 60), to center the tooltip */
-
-	/* delay tooltip */
-	visibility: hidden;
-	opacity: 0;
-	transition: opacity 0.1s 0 ease;
-
-	-moz-user-select: none;
-	-webkit-user-select: none;
-	-o-user-select: none;
-	user-select: none;
-}
-
-.factor:hover .tooltip-text {
-	visibility: visible;
-	opacity: 1;
-}
-
-.tooltip-text::after {
-	content: ' ';
-	position: absolute;
-	top: 100%; /* at the bottom of the tooltip */
-	left: 50%;
-	margin-top: -5px;
-	border-width: 5px;
-	border-style: solid;
-	border-color: transparent transparent transparent white;
 }
 
 /* cap factor size for small screens */

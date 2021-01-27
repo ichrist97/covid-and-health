@@ -4,6 +4,7 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<title>Covid and Health</title>
+		<link rel="shortcut icon" href="./assets/favicon.ico" />
 
 		<link rel="stylesheet" href="stylesheets/core.css" />
 
@@ -19,7 +20,12 @@
 	<body>
 		<!-- All elements are wrapped in a grid layout -->
 		<div id="grid">
-			<div id="lineChart" class="gridElement"></div>
+			<div id="lineChart" class="gridElement">
+				<div id="covid-data-toogle-container">
+					<div class="covid-data-toogle left checked" data-covid="cases">Infections</div>
+					<div class="covid-data-toogle right" data-covid="deaths">Deaths</div>
+				</div>
+			</div>
 			<div id="scatterPlot" class="gridElement">
 				<svg class="plot"></svg>
 			</div>
@@ -37,7 +43,8 @@
 					Cumulated deaths: <span id="cumulated-deaths" class="country-detail"></span>
 				</h3>
 				<h3 id="selected-country-factor">
-					<span id="selected-health-factor-name"></span>: <span: id="selected-health-factor" class="country-detail"></span:>
+					<span id="selected-health-factor-name"></span>:
+					<span id="selected-health-factor" class="country-detail"></span>
 				</h3>
 			</div>
 			<div id="factor-details" class="gridElement"></div>
@@ -53,7 +60,7 @@
 					This visualization was created by students from LMU Munich as part of the course
 					<i>Information Visualization</i>. The goal is to visualize connections between the infection and death rates
 					of Covid19 and various health and lifestyle factors. <br /><br />
-					The heal factor can be selected in the menu on the right. The timeline at the bottom allows the selection of
+					The health factor can be selected in the menu on the right. The timeline at the bottom allows the selection of
 					the week of the year 2020 to display. Clicking on a data point highlights the selection county and gives
 					detailed information.
 				</p>
@@ -99,7 +106,7 @@
 								This visualization was created by students from LMU Munich as part of the course
 								<i>Information Visualization</i>. The goal is to visualize connections between the infection and death
 								rates of Covid19 and various health and lifestyle factors. <br /><br />
-								The heal factor can be selected in the menu on the right. The timeline at the bottom allows the
+								The health factor can be selected in the menu on the right. The timeline at the bottom allows the
 								selection of the week of the year 2020 to display. Clicking on a data point highlights the selection
 								county and gives detailed information.
 							</p>

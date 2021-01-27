@@ -16,13 +16,6 @@ function setupFactors(dataContainer) {
 			item.appendChild(text)
 			container.appendChild(item)
 
-			// set tooltips for factors
-			const tooltip = document.createElement('span')
-			const tooltipText = factorExplanation[factor]
-			tooltip.innerText = tooltipText
-			tooltip.classList.add('tooltip-text')
-			item.appendChild(tooltip)
-
 			// activate css for default selected factor
 			if (factor === selectedFactor.value) {
 				item.classList.add('checked')
