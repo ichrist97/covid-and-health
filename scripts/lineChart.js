@@ -166,10 +166,10 @@ function plotLineChart(completeData, data, selectedCountry, selectedFactor, sele
 	svg
 		.append('text')
 		.attr('is-label', true)
-		.attr('transform', `translate(${width / 2 + margin.left},${height + margin.bottom})`)
-		.style('text-anchor', 'middle')
+		.attr('transform', `translate(${width + margin.right},${height + margin.bottom})`)
+		.style('text-anchor', 'end')
 		.style('font-size', theme().fontSizeAxis)
-		.style('fill', 'black')
+		.style('fill', theme().axis)
 		.text('weeks of 2020')
 
 	//set up the y axis
@@ -251,11 +251,14 @@ function plotLineChart(completeData, data, selectedCountry, selectedFactor, sele
 			return 0 // fallback
 		})
 		.attr('stroke', d => {
-			if (d.country == selectedCountry.value) {
+			if (d.country === selectedCountry.value) {
 				return theme().selection
 			} else {
 				return theme().primaryA
 			}
+		})
+		.style('opacity', d => {
+			return d.country === selectedCountry.value ? 1 : 0.4
 		})
 		// set country on bar for selecting
 		.attr('data-country', d => d.country)
@@ -279,6 +282,8 @@ function plotLineChart(completeData, data, selectedCountry, selectedFactor, sele
 				})
 				// make stroke width bigger
 				.attr('stroke-width', 4)
+				// set opacity high
+				.style('opacity', 1)
 		})
 		// user leaves line
 		.on('mouseleave', event => {
@@ -295,6 +300,10 @@ function plotLineChart(completeData, data, selectedCountry, selectedFactor, sele
 				.attr('stroke-width', () => {
 					const selected = event.target.parentNode.getAttribute('data-selected')
 					return selected == 'true' ? 4 : 1
+				})
+				// set opacity to default after mouse leave
+				.style('opacity', d => {
+					return d.country === selectedCountry.value ? 1 : 0.4
 				})
 
 			d3.select('[data-selected=true]').raise()

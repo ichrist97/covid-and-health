@@ -12,12 +12,13 @@
 }
 
 .factor {
+	color: black;
 	border-radius: 10px;
 	background-color: #ababab;
 	width: 40%;
-	height: 3vh;
+	height: 2vh;
 	text-align: center;
-	padding: 0.5em;
+	padding: 0.4em;
 	margin: 0.1em;
 
 	/* align text in center */
@@ -40,12 +41,13 @@
 }
 
 .factor.checked {
-	background-color: #e6550d;
+	background-color: #636363;
+	color: white;
 }
 
 /* cap factor size for small screens */
 @media only screen and (max-width: 120em) {
 	.factor {
-		height: 2vh;
+		max-height: 1em;
 	}
 }

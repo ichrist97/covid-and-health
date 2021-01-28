@@ -7,7 +7,7 @@
 
 #country-details h2 {
 	margin: 0;
-	font-size: 3vh;
+	font-size: 1.5vw;
 	padding-top: 0.1em;
 	padding-left: 1vw;
 	font-weight: bold;
@@ -18,11 +18,24 @@
 	text-overflow: ellipsis;
 }
 
-#country-details h3 {
+#country-details .country-details-right h3 {
 	margin: 0;
-	margin-top: 6%;
-	font-size: 1.9vh;
+	margin-top: 5%;
+	font-size: 1.8vh;
 	padding-left: 1vw;
+	font-weight: normal;
+
+	/* shorten text if too long*/
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+#country-details .country-details-left h3 {
+	margin: 0;
+	margin-top: 11.5%;
+	font-size: 2vh;
+	padding-left: 1.1vw;
 	font-weight: normal;
 
 	/* shorten text if too long*/

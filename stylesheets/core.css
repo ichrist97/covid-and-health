@@ -39,9 +39,11 @@ Global styling for the grid and grid elements
 
 	padding: 10px 10px 10px 10px;
 
-	/* two columns and ten equi-sized rows */
+	/* two columns */
 	grid-template-columns: 70% 30%;
-	grid-template-rows: 10% 10% 10% 10% 10% 10% 10% 10% 10% 10%;
+
+	/* 12 rows */
+	grid-template-rows: 10% 10% 8% 8% 8% 8% 8% 8% 8% 8% 8% 8%;
 }
 
 .gridElement {

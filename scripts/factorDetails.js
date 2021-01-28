@@ -11,7 +11,7 @@ let currentData // current data subset filtered by selected factor
 const container = document.querySelector('#factor-details')
 const offsetWidth = container.offsetWidth
 const offsetHeight = container.offsetHeight
-const margin = { top: 20, right: 20, bottom: 40, left: 20 },
+const margin = { top: 10, right: 20, bottom: 40, left: 20 },
 	width = offsetWidth - margin.left - margin.right,
 	height = offsetHeight - margin.top - margin.bottom
 
@@ -123,14 +123,13 @@ function renderBars(data, selectedCountry, selectedFactor, bounds) {
 		// user hovers over bar
 		.on('mouseenter', event => {
 			d3.select(event.target)
-				.attr('fill', d => {
+				.attr('fill', () => {
 					// only change when bar is not selected
 					const country = event.target.getAttribute('data-country')
 					return country !== selectedCountry.value ? theme().hover : theme().selection
 				})
 				.style('cursor', 'pointer')
 		})
-
 		// user leaves bar
 		.on('mouseleave', event => {
 			d3.select(event.target)
@@ -191,7 +190,12 @@ function renderBars(data, selectedCountry, selectedFactor, bounds) {
 
 	// add the xAxis
 	svg.selectAll('.xAxis').remove() // remove old axis
-	svg.append('g').attr('class', 'xAxis').attr('transform', `translate(0,${height})`).call(d3.axisBottom(xScale))
+	svg
+		.append('g')
+		.attr('class', 'xAxis')
+		.attr('transform', `translate(0,${height})`)
+		.attr('fill', theme().axis)
+		.call(d3.axisBottom(xScale))
 
 	// xAxis label
 	const label = factorExplanation[selectedFactor.value]
@@ -200,11 +204,12 @@ function renderBars(data, selectedCountry, selectedFactor, bounds) {
 	// new label
 	svg
 		.append('text')
+		.attr('id', 'bar-chart-label')
 		.attr('is-label', true)
-		.attr('transform', 'translate(' + width / 2 + ' ,' + (height + margin.top + 10) + ')')
-		.style('text-anchor', 'middle')
-		.style('font-size', '12px')
-		.style('fill', 'black')
+		.attr('transform', `translate(${width},${height + margin.top + 25})`)
+		.style('text-anchor', 'end')
+		.style('font-size', theme().fontSizeAxis)
+		.style('fill', theme().axis)
 		.text(label)
 }
 

@@ -1,43 +1,46 @@
 #lineChart {
-	grid-area: 7 / 1 / 10 / 2;
+	grid-area: 8 / 1 / 12 / 2;
 	position: relative;
 }
 
 #covid-data-toogle-container {
 	position: absolute;
 	top: 50px;
-	left: 40px;
+	left: 65px;
 	margin: 0 auto;
 
 	display: flex;
+	flex-direction: column;
 }
 
 #covid-data-toogle-container .covid-data-toogle {
 	padding: 0.4em;
-	border: 1px solid black;
+	border: 1px solid #575757;
 	width: 5em;
 	text-align: center;
 	background-color: #ababab;
 	font-size: 0.8em;
+	color: black;
 }
 
-#covid-data-toogle-container .covid-data-toogle.left {
+#covid-data-toogle-container .covid-data-toogle.top {
 	border-top-left-radius: 10px;
-	border-bottom-left-radius: 10px;
+	border-top-right-radius: 10px;
 }
 
-#covid-data-toogle-container .covid-data-toogle.right {
-	border-top-right-radius: 10px;
+#covid-data-toogle-container .covid-data-toogle.bottom {
+	border-bottom-left-radius: 10px;
 	border-bottom-right-radius: 10px;
 }
 
 #covid-data-toogle-container .covid-data-toogle.checked {
-	background-color: #e6550d;
+	background-color: #636363;
+	color: white;
 }
 
 #covid-data-toogle-container .covid-data-toogle.checked:hover {
-	cursor: pointer;
-	background-color: #e6550d;
+	background-color: #636363;
+	color: white;
 }
 
 #covid-data-toogle-container .covid-data-toogle:hover {
