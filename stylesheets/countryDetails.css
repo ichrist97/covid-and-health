@@ -7,7 +7,7 @@
 
 #country-details h2 {
 	margin: 0;
-	font-size: 4vh;
+	font-size: 3vh;
 	padding-top: 0.1em;
 	padding-left: 1vw;
 	font-weight: bold;
@@ -20,7 +20,8 @@
 
 #country-details h3 {
 	margin: 0;
-	font-size: 2vh;
+	margin-top: 6%;
+	font-size: 1.9vh;
 	padding-left: 1vw;
 	font-weight: normal;
 
@@ -30,6 +31,22 @@
 	text-overflow: ellipsis;
 }
 
+#country-details .sub {
+	font-size: 1.2vh;
+}
+
 .country-detail {
 	color: #e6550d;
+}
+
+.country-details-right {
+	position: absolute;
+	left: 55%;
+	top: 2%;
+}
+
+.country-details-left {
+	position: absolute;
+	left: 0%;
+	top: 2%;
 }

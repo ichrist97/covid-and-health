@@ -88,6 +88,8 @@ async function loadData() {
 	insertOECDData(DATA, DATA_HOSPITALBEDS, FACTORS.HOSPITALBEDS)
 	insertOECDData(DATA, DATA_OBESITY, FACTORS.OBESITY)
 
+	console.log(DATA)
+
 	//console.log(`data of ${Object.keys(DATA).length} countries and regions found`)
 	//console.log(DATA)
 
@@ -136,10 +138,10 @@ function getFactorUnit(factor) {
 			unit = '%'
 			break
 		case 'alcohol':
-			unit = 'litre/capita'
+			unit = 'litre'
 			break
 		case 'hospitalBeds':
-			unit = 'beds/1000 inhabitants'
+			unit = 'beds'
 			break
 		case 'healthSpendings':
 			unit = '%'
