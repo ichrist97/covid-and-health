@@ -9,7 +9,6 @@
 	margin: 0;
 	font-size: 1.5vw;
 	padding-top: 0.1em;
-	padding-left: 1vw;
 	font-weight: bold;
 
 	/* shorten text if too long*/
@@ -20,10 +19,11 @@
 
 #country-details .country-details-right h3 {
 	margin: 0;
-	margin-top: 5%;
 	font-size: 1.8vh;
-	padding-left: 1vw;
 	font-weight: normal;
+
+	height: 33%;
+	vertical-align: middle;
 
 	/* shorten text if too long*/
 	white-space: nowrap;
@@ -35,7 +35,6 @@
 	margin: 0;
 	margin-top: 11.5%;
 	font-size: 2vh;
-	padding-left: 1.1vw;
 	font-weight: normal;
 
 	/* shorten text if too long*/
@@ -55,11 +54,13 @@
 .country-details-right {
 	position: absolute;
 	left: 55%;
-	top: 2%;
+	top: 5%;
+	bottom: 5%;
 }
 
 .country-details-left {
 	position: absolute;
-	left: 0%;
-	top: 2%;
+	left: 30px;
+	top: 5%;
+	bottom: 5%;
 }

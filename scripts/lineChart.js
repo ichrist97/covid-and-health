@@ -270,20 +270,20 @@ function plotLineChart(completeData, data, selectedCountry, selectedFactor, sele
 			return line(d.data)
 		})
 		// user hovers over line
-		.on('mouseenter', event => {
+		.on('mouseenter', (event, d) => {
 			d3.select(event.target)
 				// pointer cursor
 				.style('cursor', 'pointer')
 				// stoke to hover color
 				.attr('stroke', () => {
-					// only change when line color is not selected
-					const selected = event.target.parentNode.getAttribute('data-selected')
-					return selected == 'true' ? theme().selection : theme().hover
+					return theme().hover
 				})
 				// make stroke width bigger
 				.attr('stroke-width', 4)
 				// set opacity high
 				.style('opacity', 1)
+
+			showTooltip(event, d.name)
 		})
 		// user leaves line
 		.on('mouseleave', event => {
@@ -307,6 +307,7 @@ function plotLineChart(completeData, data, selectedCountry, selectedFactor, sele
 				})
 
 			d3.select('[data-selected=true]').raise()
+			clearTooltip()
 		})
 		.on('click', event => {
 			// update observable
@@ -356,6 +357,42 @@ function plotLineChart(completeData, data, selectedCountry, selectedFactor, sele
 
 	// raise dot in svg rendering order
 	d3.select('.dot').raise()
+}
+
+//Shows a tooltip for the given country
+function showTooltip(e, name) {
+	const rect = container.node().getBoundingClientRect()
+	const x = e.clientX - rect.left
+	const y = e.clientY - rect.top
+
+	const text = container
+		.append('text')
+		.classed('tooltip', true)
+		.text(name)
+		.attr('x', x) //e.clientX
+		.attr('y', y) //e.clientY
+		.attr('text-anchor', 'middle')
+		.attr('dominant-baseline', 'central')
+		.attr('fill', theme().font)
+		.style('font-size', theme().fontSizeDefault)
+
+	const box = text.node().getBBox()
+
+	container
+		.append('rect')
+		.classed('tooltip', true)
+		.attr('fill', theme().hover)
+		.attr('x', box.x - 2)
+		.attr('y', box.y - 2)
+		.attr('width', box.width + 4)
+		.attr('height', box.height + 4)
+
+	text.raise()
+}
+
+//Removes all tooltips
+function clearTooltip() {
+	container.selectAll('.tooltip').remove()
 }
 
 export { createLineChart }
