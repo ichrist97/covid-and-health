@@ -19,7 +19,7 @@
 
 #country-details .country-details-right h3 {
 	margin: 0;
-	font-size: 1.8vh;
+	font-size: 1.7vh;
 	font-weight: normal;
 
 	height: 33%;
@@ -33,8 +33,8 @@
 
 #country-details .country-details-left h3 {
 	margin: 0;
-	margin-top: 11.5%;
-	font-size: 2vh;
+	margin-top: 5%;
+	font-size: 1.7vh;
 	font-weight: normal;
 
 	/* shorten text if too long*/

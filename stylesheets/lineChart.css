@@ -6,7 +6,7 @@
 #covid-data-toogle-container {
 	position: absolute;
 	top: 50px;
-	left: 65px;
+	left: 40px;
 	margin: 0 auto;
 
 	display: flex;
@@ -15,14 +15,16 @@
 
 #covid-data-toogle-container .covid-data-toogle {
 	padding: 0.4em;
-	border: 1px solid #575757;
-	width: 5em;
+	width: 7em;
+	margin-top: 5px;
 	text-align: center;
-	background-color: #ababab;
-	font-size: 0.8em;
+	background-color: #d1d1d1;
+	font-size: 1.2vh;
 	color: black;
+	border-radius: 8px;
 }
 
+/*
 #covid-data-toogle-container .covid-data-toogle.top {
 	border-top-left-radius: 10px;
 	border-top-right-radius: 10px;
@@ -32,6 +34,7 @@
 	border-bottom-left-radius: 10px;
 	border-bottom-right-radius: 10px;
 }
+*/
 
 #covid-data-toogle-container .covid-data-toogle.checked {
 	background-color: #636363;
@@ -45,5 +48,5 @@
 
 #covid-data-toogle-container .covid-data-toogle:hover {
 	cursor: pointer;
-	background-color: #bcbcbc;
+	background-color: #f2f2f2;
 }

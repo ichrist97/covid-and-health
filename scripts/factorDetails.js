@@ -11,7 +11,7 @@ let currentData // current data subset filtered by selected factor
 const container = document.querySelector('#factor-details')
 const offsetWidth = container.offsetWidth
 const offsetHeight = container.offsetHeight
-const margin = { top: 10, right: 20, bottom: 40, left: 20 },
+const margin = { top: 10, right: 30, bottom: 40, left: 30 },
 	width = offsetWidth - margin.left - margin.right,
 	height = offsetHeight - margin.top - margin.bottom
 
@@ -165,7 +165,7 @@ function renderBars(data, selectedCountry, selectedFactor, bounds) {
 			return yScale(d.country) + yScale.bandwidth() * 0.5
 		})
 		.attr('font-family', 'sans-serif')
-		.attr('font-size', '60%')
+		.attr('font-size', theme().fontSizeAxis)
 		.attr('fill', d => {
 			const readable = determineTextReadability(d.value, bounds)
 			return readable ? 'white' : 'black'
@@ -206,7 +206,7 @@ function renderBars(data, selectedCountry, selectedFactor, bounds) {
 		.append('text')
 		.attr('id', 'bar-chart-label')
 		.attr('is-label', true)
-		.attr('transform', `translate(${width},${height + margin.top + 25})`)
+		.attr('transform', `translate(${width},${height + margin.top + 20})`)
 		.style('text-anchor', 'end')
 		.style('font-size', theme().fontSizeAxis)
 		.style('fill', theme().axis)

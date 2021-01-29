@@ -18,7 +18,7 @@ body {
 	margin: auto;
 	height: 100vh;
 	width: 100%;
-	max-width: 120em; /* cap width at 1080p */
+	max-width: 140vh;
 
 	overflow: hidden;
 }
@@ -43,7 +43,7 @@ Global styling for the grid and grid elements
 	grid-template-columns: 70% 30%;
 
 	/* 12 rows */
-	grid-template-rows: 10% 10% 8% 8% 8% 8% 8% 8% 8% 8% 8% 8%;
+	grid-template-rows: 8% 8% 13% 7% 7% 7% 8% 8% 8% 8% 8% 10%;
 }
 
 .gridElement {
@@ -112,7 +112,7 @@ Global styling for the grid and grid elements
 
 #exit-loading {
 	display: none;
-	background-color: #3182bd;
+	background-color: #3172bd;
 	border-radius: 10px;
 	padding: 1em;
 	border: none;
