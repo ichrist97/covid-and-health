@@ -217,6 +217,7 @@ function plotLineChart(completeData, data, selectedCountry, selectedFactor, sele
 
 	const line = d3
 		.line()
+		.curve(d3.curveCardinal)
 		.x(function (d) {
 			return xValue(d.week)
 		})
@@ -236,6 +237,7 @@ function plotLineChart(completeData, data, selectedCountry, selectedFactor, sele
 	//Suggestion: Put updating the different components in their own functions and for each update only call the necessary functions for that update
 	const lineFlat = d3
 		.line()
+		.curve(d3.curveCardinal)
 		.x(d => xValue(d.week))
 		.y(yValue(0))
 
