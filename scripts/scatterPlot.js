@@ -99,7 +99,7 @@ function createScatterPlot(dataContainer) {
 		yLabel
 			.append('tspan')
 			.attr('x', 0)
-			.attr('dy', theme().fontSizeAxis + 3)
+			.attr('dy', 12 + 3)
 			.text('per 100.000 capita')
 	}
 
@@ -166,7 +166,7 @@ function createScatterPlot(dataContainer) {
 		label
 			.append('tspan')
 			.attr('x', 0)
-			.attr('dy', theme().fontSizeAxis + 3)
+			.attr('dy', 12 + 3)
 			.text(labelWords.slice(Math.ceil(labelWords.length / 2)).join(' '))
 	}
 

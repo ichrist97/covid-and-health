@@ -9,7 +9,7 @@ let container
 const graph = document.querySelector('#lineChart')
 const offsetWidth = graph.offsetWidth
 const offsetHeight = graph.offsetHeight
-const margin = { top: 10, right: 30, bottom: 30, left: 30 },
+const margin = { top: 30, right: 30, bottom: 30, left: 30 },
 	width = offsetWidth - margin.left - margin.right,
 	height = offsetHeight - margin.top - margin.bottom
 
@@ -166,7 +166,7 @@ function plotLineChart(completeData, data, selectedCountry, selectedFactor, sele
 	svg
 		.append('text')
 		.attr('is-label', true)
-		.attr('transform', `translate(${width + margin.right},${height + margin.bottom})`)
+		.attr('transform', `translate(${width + margin.right},${height + margin.top + 20})`)
 		.style('text-anchor', 'end')
 		.style('font-size', theme().fontSizeAxis)
 		.style('fill', theme().axis)
@@ -210,7 +210,7 @@ function plotLineChart(completeData, data, selectedCountry, selectedFactor, sele
 	yLabel
 		.append('tspan')
 		.attr('x', 0)
-		.attr('dy', theme().fontSizeAxis + 3)
+		.attr('dy', 12 + 3)
 		.text('per 100.000 capita')
 
 	//lines

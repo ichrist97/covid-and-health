@@ -47,10 +47,3 @@
 	background-color: #636363;
 	color: white;
 }
-
-/* cap factor size for small screens */
-@media only screen and (max-width: 120em) {
-	.factor {
-		max-height: 1em;
-	}
-}

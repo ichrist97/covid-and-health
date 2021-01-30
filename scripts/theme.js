@@ -47,9 +47,9 @@ function DefaultTheme() {
 	this.marginLarge = 70
 
 	//Different font sizes
-	this.fontSizeAxis = 12
-	this.fontSizeSmall = 12
-	this.fontSizeDefault = 14
+	this.fontSizeAxis = '12px'
+	this.fontSizeSmall = '12px'
+	this.fontSizeDefault = '14px'
 
 	//The min and max scales for scatter plot points
 	this.minScatterPoint = 6
