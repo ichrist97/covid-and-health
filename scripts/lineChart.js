@@ -46,27 +46,27 @@ function createLineChart(dataContainer) {
 				event.target.classList.add('checked')
 
 				// trigger chart rerender
-				updateGraph(dataContainer)
+				updateGraph(dataContainer, true)
 			})
 		})
 	}
 
 	// updating graph at observable change
-	function updateGraph(dataContainer) {
+	function updateGraph(dataContainer, playTransition = false) {
 		const { data, selectedFactor, selectedCountry, selectedWeek } = dataContainer
 		const filteredData = filterData(data, selectedFactor.value)
-		plotLineChart(data, filteredData, selectedCountry, selectedFactor, selectedWeek)
+		plotLineChart(data, filteredData, selectedCountry, selectedFactor, selectedWeek, playTransition)
 	}
 
 	// subscribe to observable
 	selectedWeek.subscribe(() => updateGraph(dataContainer))
 	selectedCountry.subscribe(() => updateGraph(dataContainer))
-	selectedFactor.subscribe(() => updateGraph(dataContainer))
+	selectedFactor.subscribe(() => updateGraph(dataContainer, true))
 
 	// plot line chart
 	setupDataToogle()
 	const filteredData = filterData(data, selectedFactor.value)
-	plotLineChart(data, filteredData, selectedCountry, selectedFactor, selectedWeek)
+	plotLineChart(data, filteredData, selectedCountry, selectedFactor, selectedWeek, true)
 }
 
 //find the max number of infections from all countries with a factor and according to covid data type
@@ -127,7 +127,7 @@ function filterData(data, selectedFactor) {
 	return allCountriesData
 }
 
-function plotLineChart(completeData, data, selectedCountry, selectedFactor, selectedWeek) {
+function plotLineChart(completeData, data, selectedCountry, selectedFactor, selectedWeek, playTransition) {
 	//find the start week of the data
 	const firstWeek = Math.min(
 		...Object.values(completeData).map(x => {
@@ -213,6 +213,7 @@ function plotLineChart(completeData, data, selectedCountry, selectedFactor, sele
 		.text('per 100.000 capita')
 
 	//lines
+
 	const line = d3
 		.line()
 		.x(function (d) {
@@ -227,6 +228,16 @@ function plotLineChart(completeData, data, selectedCountry, selectedFactor, sele
 			return 0 // fallback
 		})
 
+	//This is for the line transitions
+	//I use this to generate a flat path that then transitions to the real path
+	//I have to use some hacks, as you redraw the entire line chart for every update
+	//However, I think these animations should only happen when the factor is changed
+	//Suggestion: Put updating the different components in their own functions and for each update only call the necessary functions for that update
+	const lineFlat = d3
+		.line()
+		.x(d => xValue(d.week))
+		.y(yValue(0))
+
 	//drawing
 	container.selectAll('.line-group').remove() // remove old line
 
@@ -238,8 +249,6 @@ function plotLineChart(completeData, data, selectedCountry, selectedFactor, sele
 		.attr('data-selected', function (d) {
 			return d.country === selectedCountry.value
 		})
-
-	lines
 		.append('path')
 		.attr('class', 'line')
 		.attr('y', d => {
@@ -266,9 +275,25 @@ function plotLineChart(completeData, data, selectedCountry, selectedFactor, sele
 		.attr('stroke-width', d => {
 			return d.country === selectedCountry.value ? 4 : 1
 		})
-		.attr('d', d => {
+
+	//If the factor has changed play the transition
+	if (playTransition) {
+		lines
+			.attr('d', d => {
+				return lineFlat(d.data)
+			})
+			.transition()
+			.duration(theme().transitionDuration)
+			.attr('d', d => {
+				return line(d.data)
+			})
+	} else {
+		lines.attr('d', d => {
 			return line(d.data)
 		})
+	}
+
+	lines
 		// user hovers over line
 		.on('mouseenter', (event, d) => {
 			d3.select(event.target)
@@ -360,6 +385,8 @@ function plotLineChart(completeData, data, selectedCountry, selectedFactor, sele
 }
 
 //Shows a tooltip for the given country
+//I took this from the scatter plot
+//This function creates the tooltip elements and places them at the mouse position
 function showTooltip(e, name) {
 	const rect = container.node().getBoundingClientRect()
 	const x = e.clientX - rect.left
