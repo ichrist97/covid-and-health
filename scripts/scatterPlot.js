@@ -253,14 +253,18 @@ function createScatterPlot(dataContainer) {
 	}
 
 	//Shows the cleaned data in the plot
-	function showScatterPlot(data, bounds) {
+	function showScatterPlot(data, bounds, delay) {
 		const update = container.selectAll('circle').data(data, x => x.country)
+		const randomDuration = () => theme().transitionDuration * (Math.random() * 0.6 + 0.7)
 
 		update.filter(d => d.country == selectedCountry.value).style('fill', theme().selection)
+		update.interrupt()
 
 		update
-			.transition(d3.easeBackInOut)
+			.transition()
+			.ease(d3.easeCubicInOut)
 			.duration(theme().transitionDuration)
+			.delay(delay)
 			.attr('r', d => r((d.factor - bounds.min) / bounds.span))
 			.attr('cx', d => x(d.cases))
 			.attr('cy', d => y(d.deaths))
@@ -277,10 +281,11 @@ function createScatterPlot(dataContainer) {
 
 		enter
 			.transition()
-			.duration(theme().transitionDuration)
+			.duration(randomDuration)
+			.delay(delay)
 			.attrTween('r', d => d3.interpolate(0, r((d.factor - bounds.min) / bounds.span)))
 
-		update.exit().transition(d3.easeBackIn).duration(theme().transitionDuration).attr('r', 0).remove()
+		update.exit().transition().ease(d3.easeCubicIn).duration(randomDuration).delay(delay).attr('r', 0).remove()
 
 		//Sort elements and apply event callbacks
 		const set = update.merge(enter)
@@ -304,18 +309,18 @@ function createScatterPlot(dataContainer) {
 	}
 
 	//Updates the scatter plot
-	function updateScatterPlot() {
+	function updateScatterPlot(delay = 0) {
 		const data = scatterPlotData()
 		const bounds = factorMinMax(data)
 
-		showScatterPlot(data, bounds)
+		showScatterPlot(data, bounds, delay)
 		buildLegend(bounds)
 		buildAxisLabels()
 	}
 
 	//Subscribe the update to global events
 	selectedCountry.subscribe(updateScatterPlot)
-	selectedWeek.subscribe(updateScatterPlot)
+	selectedWeek.subscribe(() => updateScatterPlot(250))
 	selectedFactor.subscribe(updateScatterPlot)
 
 	updateScatterPlot()
