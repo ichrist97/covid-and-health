@@ -78,3 +78,7 @@ An **overview line plot** shows the infection or death rates for all countries o
 
 - **Progress of infections and deaths througout the year 2020**\
   A line chart which shows the development of infections or deaths for each country based on the user's selection.
+
+## Documentation
+
+Further documentation about the design specifications, underlying usage principles, project management and progress of development can be found in an external documentation.
