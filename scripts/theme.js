@@ -53,7 +53,7 @@ function DefaultTheme() {
 
 	//The min and max scales for scatter plot points
 	this.minScatterPoint = 6
-	this.maxScatterPoint = 36
+	this.maxScatterPoint = 40
 
 	//The count and size of scatterplot legend elements
 	this.scatterLegendCount = 5

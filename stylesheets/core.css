@@ -41,7 +41,7 @@ Global styling for the grid and grid elements
 	padding: 10px 10px 10px 10px;
 
 	/* two columns */
-	grid-template-columns: 65% 35%;
+	grid-template-columns: 68% 32%;
 
 	/* 12 rows */
 	grid-template-rows: 8% 8% 13% 7% 7% 7% 8% 8% 8% 8% 8% 10%;

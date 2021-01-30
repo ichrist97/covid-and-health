@@ -346,24 +346,38 @@ function plotLineChart(completeData, data, selectedCountry, selectedFactor, sele
 	// raise selected line in svg render order
 	d3.select('[data-selected=true]').raise()
 
+	container.selectAll('.dot').remove()
 	const weekDataSelectedCountry = data.filter(item => item.country === selectedCountry.value)
 	// only render dot if factor is available for selectedCountry
 	if (weekDataSelectedCountry[0]) {
 		// draw dot at selected week
-		lines
+		const dot = container
 			.append('circle')
-			.attr('class', 'dot')
+			.classed('dot', true)
 			.attr('fill', theme().selection)
 			.attr('stroke', 'none')
 			.attr('cx', () => {
 				return xValue(selectedWeek.value)
 			})
-			.attr('cy', function (d) {
+			.attr('r', 6)
+
+		if (playTransition) {
+			dot
+				.attr('cy', height)
+				.transition()
+				.duration(theme().transitionDuration)
+				.attr('cy', function (d) {
+					const selectedWeekData = weekDataSelectedCountry[0].data.filter(item => item.week === selectedWeek.value)
+					// return zero if values for weeks are not existing
+					return selectedWeekData[0] ? yValue(selectedWeekData[0][covidDataType]) : yValue(0)
+				})
+		} else {
+			dot.attr('cy', function (d) {
 				const selectedWeekData = weekDataSelectedCountry[0].data.filter(item => item.week === selectedWeek.value)
 				// return zero if values for weeks are not existing
 				return selectedWeekData[0] ? yValue(selectedWeekData[0][covidDataType]) : yValue(0)
 			})
-			.attr('r', 6)
+		}
 	}
 
 	// draw rect connecting dot and axis
