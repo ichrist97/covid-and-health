@@ -174,6 +174,7 @@ function plotLineChart(completeData, data, selectedCountry, selectedFactor, sele
 
 	//set up the y axis
 	const yValue = d3.scaleLinear().domain([0, maxInfections]).range([height, 0])
+	//const yValue = d3.scaleLog().domain([1, maxInfections]).range([height, 0]).clamp(true).nice()
 
 	svg.selectAll('.yAxis').remove() //remove old yAxis
 	let yA = svg
