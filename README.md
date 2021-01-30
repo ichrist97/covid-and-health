@@ -40,7 +40,7 @@ Other browsers might but are not guaranteed to work.
 
 ---
 
-## Project description - masters course on information visualization at LMU Munich WS 20/12
+## Project description - masters course on information visualization at LMU Munich WS 20/21
 
 ### Components
 
