@@ -2,6 +2,8 @@
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/f8a4f57a-a817-48f3-98de-1df9d03af9cb/deploy-status)](https://app.netlify.com/sites/covid-and-health/deploys)
 
+![alt](/assets/icon-coronavirus.png)
+
 ## How to use the application
 
 ### Online (Recommended)
@@ -38,7 +40,7 @@ Other browsers might but are not guaranteed to work.
 
 ---
 
-## Project description - masters course on information visualization at LMU Munich WS 20/12
+## Project description - masters course on information visualization at LMU Munich WS 20/21
 
 ### Components
 
@@ -78,3 +80,7 @@ An **overview line plot** shows the infection or death rates for all countries o
 
 - **Progress of infections and deaths througout the year 2020**\
   A line chart which shows the development of infections or deaths for each country based on the user's selection.
+
+## Documentation
+
+Further documentation about the design specifications, underlying usage principles, project management and progress of development can be found in an external documentation.
