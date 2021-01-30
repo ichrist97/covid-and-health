@@ -405,9 +405,11 @@ function plotLineChart(completeData, data, selectedCountry, selectedFactor, sele
 //I took this from the scatter plot
 //This function creates the tooltip elements and places them at the mouse position
 function showTooltip(e, name) {
+	clearTooltip()
+
 	const rect = container.node().getBoundingClientRect()
 	const x = e.clientX - rect.left
-	const y = e.clientY - rect.top
+	const y = e.clientY - rect.top - 15
 
 	const text = container
 		.append('text')
